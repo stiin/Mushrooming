@@ -1,4 +1,4 @@
-This is the main repository for the working group 3 project work for holding everything under Views, Public and Routes folders.
+This is the main repository for the working group 3 project work for holding everything under Views, Public and Routes folders (i.e. default folders in Node.js + Express).
 
 Do not push anything to this repository from which you are not sure of whether it is working or not.
 

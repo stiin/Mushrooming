@@ -1,6 +1,6 @@
 This is the main repository for the working group 3 project work.
 
-Do not push anything to this repository, which you are not sure of whether it is workin or not.
+Do not push anything to this repository from which you are not sure of whether it is working or not.
 
 It is preferable to do regular pulls from this repository for to keep your project work in the same phase as with others.
 

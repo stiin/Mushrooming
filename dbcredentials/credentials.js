@@ -2,17 +2,17 @@
 var pg = require('pg');
 
 // This has to changes according to the hermes2.infa.kth.se database
-var host ='localhost'; // 130.237.64.8
+var host ='130.237.64.8'; 
 var port ='5432';
-var dbName = 'spatial_database_lab3_database'; // spatial_db -> mushroom data + osm/pgRouting topology
+var dbName = 'spatial_db'; // spatial_db -> mushroom data + osm/pgRouting topology
 
-var connectionString = 'postgres://postgres:postgres@'+host+':'+port+'/'+dbName;
+var connectionString = 'postgres://group3:wkAZuQ@'+host+':'+port+'/'+dbName;
 
 // Export the connection string for usage by the API
 module.exports = connectionString;
 
 var client = new pg.Client(connectionString);
-//client.connect();
+client.connect();
 
 
 

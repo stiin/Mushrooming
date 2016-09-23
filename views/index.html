@@ -1,20 +1,75 @@
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Node.js + Express test</title>
+  <head>
+    <title>Mushrooming!</title>
 		
-		<!-- OpenLayers 3 src and css -files -->
-		<script src="http://openlayers.org/en/v3.11.1/build/ol.js"></script>
-    	<link rel="stylesheet" href="http://openlayers.org/en/v3.11.1/css/ol.css" type="text/css">
-    	
-    	<!-- Application dependent files -->
-    	<script type="text/javascript" src="/javascripts/map.js"></script>
-    	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
-	</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- OpenLayers 3 -->
+    <script src="http://openlayers.org/en/v3.11.1/build/ol.js"></script>
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.11.1/css/ol.css" type="text/css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
+
+    <!-- Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Application dependent files -->
+    <script type="text/javascript" src="/javascripts/map.js"></script>
+    <script type="text/javascript" src="/javascripts/routing.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-sidebar.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+    <link rel="stylesheet" href="/stylesheets/ol_popup.css" type="text/css">    
+    <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css" type="text/css">
+
+  </head>
+
+  <!-- Every time when a page is opened these functions are initialized -->
+  <body onload="initMap(); routing()">  	
+   
+    <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+	      <div class="sidebar-pane" id="home">
+            <h1 class"sidebar-header">
+              <p>Mushrooming!</p>
+	          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+            </h1>
 	
-	<body onload="initMap()">
-		
-		<div id="map"></div>
-		
-	</body>
+            <!-- Buttons for different EventHandlers -->
+            <button id="start">start location</button>
+	        <br>
+            <button id="dest">destination location</button>
+            <br>
+            <button id="navigate">calculate route</button>  
+            <br>
+            <button id="clear">clear</button>
+            <br> 
+            <button id="locate">locate me</button>  
+ 	      </div>
+        </div>
+    </div>
+
+    <!-- Map container -->
+    <div id="map" class="sidebar-map"></div>
+
+    <!-- OpenLayers 3 Popup -->
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content"></div>
+    </div>
+				
+  </body>
 </html>
+

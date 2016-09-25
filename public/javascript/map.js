@@ -1,6 +1,7 @@
 var map;
 
-function initMap() {   
+// Now includes initializing of map, layers and their interaction (WFS), popup and gelocation
+function initMap() {     
 
     var container = document.getElementById('popup');
     var content = document.getElementById('popup-content');
@@ -63,7 +64,7 @@ function initMap() {
     view = new ol.View({
       center: ol.proj.transform([18.069248, 59.324783], 'EPSG:4326', 'EPSG:3857'),
       zoom:     12,
-      minZoom:  5,
+      minZoom:  1,
       maxZoom:  20  // Mapbox does not allow to zoom in to far.
     });
     
@@ -76,40 +77,68 @@ function initMap() {
       view: view
     }); 
     var sidebar = $('#sidebar').sidebar();    
+
+
     
     // Makes the layer mushroom_clusterLayer as selectable
     selectInteraction = new ol.interaction.Select({
         layers: function(layer) {
             return layer.get('selectable') == true;
         }//,
-          //style: [selectedstyle]
+          //style: [selectedstyle] -> this for changing the style on feature click
     });
     map.getInteractions().extend([selectInteraction]);
 
-    // Set "selectable" should only work so that you can click them and the features inside the clusters open -> zoomify in a sense
     mushroom_clusterLayer.set('selectable', true); 
 
+    /*
     selectedFeatures = selectInteraction.getFeatures(); 
     selectedFeatures.on('add', function(event) {
       feature = event.target.item(0);
-      
       geometry = feature.getGeometry();
       coordinates = geometry.getCoordinates();
 
       // inserts every name from the feature/features into popup
       features = feature.get('features');
       for (var i = 0; i < features.length; i++) {
-	    mushrooms = features[i].get('name');
-	    content.innerHTML += mushrooms + ", ";
+	mushrooms = features[i].get('name');
+	content.innerHTML += mushrooms + ", ";
       }
-
       overlay.setPosition(coordinates);
+    });
+     */
+
+    // Creates a popup everytime a user click on the map. if the click is not a feature don't add a popup
+    map.on('click', function(event) {
+      var feature = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
+	    return feature;
+      });
+         
+      // if the map click is on feature
+      if (feature) {
+	    // Add popup overlay and reset the content
+	    map.addOverlay(overlay);
+	    content.innerHTML = "";
+
+        var geometry = feature.getGeometry();
+        var coord = geometry.getCoordinates();
+
+	    features = feature.get('features');
+	    for (var i = 0; i < features.length; i++) {
+  	      mushrooms = features[i].get('name');
+          content.innerHTML += mushrooms + ", ";
+        }
+
+	    overlay.setPosition(coord);
+
+      } else {
+	    // if the click isn't a feature close the popup
+ 	    map.removeOverlay(overlay);
+      }
     });
 
 
-
-
-
+    // Obtaining the users geolocation when user initializes the locate eventlistener, doesn't work in Chrome!
     var geolocation, accuracyFeature, accuracyBuffer, coordinates;
     var locateButton = document.getElementById('locate');
 

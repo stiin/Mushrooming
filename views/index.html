@@ -3,25 +3,28 @@
 <html>
   <head>
     <title>Mushrooming!</title>
-		
+
+    <!-- Fits the content better on mobile devices -->		
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- OpenLayers 3 -->
-    <script src="http://openlayers.org/en/v3.11.1/build/ol.js"></script>
-    <link rel="stylesheet" href="http://openlayers.org/en/v3.11.1/css/ol.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.18.2/ol.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.18.2/ol.css" type="text/css">
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap + Awesome Fonts -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Application dependent files -->
+    <!-- Application dependent files + WKX & Sidebar plugins -->
     <script type="text/javascript" src="/javascripts/map.js"></script>
     <script type="text/javascript" src="/javascripts/routing.js"></script>
+    <script type="text/javascript" src="/javascripts/query_functions.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-sidebar.js"></script>
+    <script type="text/javascript" src="/javascripts/wkx.js"></script>
     <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
     <link rel="stylesheet" href="/stylesheets/ol_popup.css" type="text/css">    
     <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css" type="text/css">
@@ -32,33 +35,89 @@
   <body onload="initMap(); routing()">  	
    
     <div id="sidebar" class="sidebar collapsed">
-        <!-- Nav tabs -->
-        <div class="sidebar-tabs">
-            <ul role="tablist">
+        
+	  <!-- Nav tabs -->
+      <div class="sidebar-tabs">
+        <ul role="tablist">
 	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-            </ul>
-        </div>
+	      <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
+	      <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
+        </ul>
 
-        <!-- Tab panes -->
-        <div class="sidebar-content">
-	      <div class="sidebar-pane" id="home">
-            <h1 class"sidebar-header">
-              <p>Mushrooming!</p>
-	          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-            </h1>
+	    <ul role="tablist">
+	      <li><a href="#sign_out" role="tab"><i class="fa fa-sign-out"></i></a></li>
+	    </ul>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="sidebar-content">
+
+	    <!-- sidebar content home -->
+	    <div class="sidebar-pane" id="home">
+          <h1 class="sidebar-header">
+            <p>Mushrooming!</p>
+	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+          </h1>
 	
-            <!-- Buttons for different EventHandlers -->
-            <button id="start">start location</button>
-	        <br>
-            <button id="dest">destination location</button>
-            <br>
-            <button id="navigate">calculate route</button>  
-            <br>
-            <button id="clear">clear</button>
-            <br> 
-            <button id="locate">locate me</button>  
- 	      </div>
-        </div>
+          <!-- Buttons for different EventHandlers -->
+	      <br>
+	      <p>Routing functions:</p>
+	      <br>
+          <button id="start">start location</button>
+	      <br>
+          <button id="dest">destination location</button>
+          <br>
+          <button id="navigate">calculate route</button>  
+          <br>
+          <button id="clear">clear route</button>
+          <br><br>
+	      <p>Does not work on Chrome!</p> 
+          <button id="locate">locate me</button>
+	    
+	    </div>
+
+	    <!-- sidebar content find mushrooms -->
+        <div class="sidebar-pane" id="find_mushrooms">
+	      <h1 class="sidebar-header">
+	        Find mushrooms!
+	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+	      </h1>
+	
+	      <br>
+	      <p>Testing functions</p>
+	      <br>
+	      <button onclick="getAllFindings()">getAllFindings</button>
+	      <br>
+	      <button onclick="getClosestDesiredMushroom(18.068390, 59.320579, 'kantarell')">getClosestDesiredMushroom</button>
+
+	    </div>
+
+	    <!-- sidebar content you findings -->
+	    <div class="sidebar-pane" id="your_findings">
+ 	      <h1 class="sidebar-header">
+	        Your mushroom findings!
+	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+	      </h1>
+
+	      <br>
+	      <p>Here maybe some functions to add and manipulate mushroom findings...</p>
+
+  	    </div>
+
+	    <!-- sidebar content sign out -->
+	    <div class="sidebar-pane" id="sign_out">
+	      <h1 class="sidebar-header">
+	        Sign Out!
+	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+	      </h1>
+		
+	      <br>
+	      <p>Here can be some user information and create, login and sign out functionalities</p>
+
+	    </div>
+
+      </div>
+
     </div>
 
     <!-- Map container -->

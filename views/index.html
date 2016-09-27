@@ -20,21 +20,13 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Application dependent files + WKX & Sidebar plugins -->
-<<<<<<< HEAD
-    <script type="text/javascript" src="/javascripts/map.js"></script>
-    <script type="text/javascript" src="/javascripts/geolocation.js"></script>
-    <script type="text/javascript" src="/javascripts/routing.js"></script>
-    <script type="text/javascript" src="/javascripts/query_functions.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery-sidebar.js"></script>
-    <script type="text/javascript" src="/javascripts/wkx.js"></script>
-
-=======
     <script type="text/javascript" src="/javascript/map.js"></script>
     <script type="text/javascript" src="/javascript/routing.js"></script>
     <script type="text/javascript" src="/javascript/query_functions.js"></script>
     <script type="text/javascript" src="/javascript/jquery-sidebar.js"></script>
     <script type="text/javascript" src="/javascript/wkx.js"></script>
->>>>>>> 92531e869ec125de0c0c89e669c78d53514526a7
+    <script type="text/javascript" src="/javascript/geolocation.js"></script>
+
     <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
     <link rel="stylesheet" href="/stylesheets/ol_popup.css" type="text/css">    
     <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css" type="text/css">
@@ -53,6 +45,7 @@
 	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
 	      <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
 	      <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
+          <li><a href="#location_settings" role="tab"><i class="fa fa-cog "></i></a></li>
 	      <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
         </ul>
 
@@ -126,6 +119,39 @@
 	      <p>Here maybe some functions to add and manipulate mushroom findings...</p>
 
   	    </div>
+
+      <!-- sidebar content LocationSettings -->
+      <div class="sidebar-pane" id="location_settings">
+          <h1 class="sidebar-header">
+              Location Settings
+              <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+          </h1>
+
+          <br>
+          <p>
+          **Location Settings (Auto/Manual)
+      <table width="100%">
+          <tr>
+              <td><font size="3">Auto fetch location</font></td>
+              <td>
+          <div class="onoffswitch">
+              <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+              <label class="onoffswitch-label" for="myonoffswitch">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+              </label>
+          </div>
+              </td>
+          </tr>
+          <tr>
+              <td><font size="3">Set Location Manually</font></td>
+              <td></td>
+          </tr>
+      </table>
+
+          </p>
+
+      </div>
 
 	    <!-- sidebar content for the mushroom info -->
 	    <div class="sidebar-pane" id="info">

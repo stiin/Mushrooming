@@ -36,3 +36,33 @@ function geolocation() {
   });
 
 }
+
+// onClick Function
+var hasbeenchecked = false;
+function autoLocationClicked(checkbox){
+    if (checkbox.checked) {
+        alert("Currently sending your position to NSA B-) ");
+        hasbeenchecked = true;
+
+        geolocation = new ol.Geolocation({
+            projection: map.getView().getProjection(),
+            tracking: true,
+            trackingOptions: {
+                enableHighAccuracy: true
+            }
+        });
+
+        geolocation.on('error', function(error) {
+            console.log(error);
+        });
+
+        geolocation.on('change:position', function (){
+           var coordinate = geolocation.getPosition();
+            view.setCenter(coordinate);
+        });
+    }
+    else{
+        if (hasbeenchecked)
+            checkbox.checked = false;
+    }
+}

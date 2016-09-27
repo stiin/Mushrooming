@@ -1,3 +1,5 @@
+var closestMushroomCoord;
+
 function getAllFindings() {
   var request = $.ajax({
     url: "/api/getAllFindings",
@@ -18,6 +20,10 @@ function getAllFindings() {
 }
 
 function getClosestDesiredMushroom(latitude, longitude, mushroom_type) {
+ 
+  // If the mushroomType is empty raise an error
+  // To be implemented
+
   var request = $.ajax({
     url: "/api/getClosestDesiredMushroom",
     type: "POST",
@@ -26,23 +32,48 @@ function getClosestDesiredMushroom(latitude, longitude, mushroom_type) {
   });
 
   request.done(function(feature) {
-    // Accessing the_geom of the returned feature
-    console.log(feature);
+    // Accessing the_geom and id of the returned feature
     var the_geom = feature[0].the_geom;
 
     // Wkx plugn in action!    
-    var Buffer = require('buffer').Buffer;
-    var wkx = require('wkx');
-    var wkbBuffer = new Buffer(the_geom, 'hex');
-    var geometry = wkx.Geometry.parse(wkbBuffer);
-    var coords = [geometry.x, geometry.y];
-    console.log(coords);
-    
+    Buffer = require('buffer').Buffer;
+    wkx = require('wkx');
+    wkbBuffer = new Buffer(the_geom, 'hex');
+    geometry = wkx.Geometry.parse(wkbBuffer);
+    geometry_y = geometry.y
+    geometry_x = geometry.x
+    closestMushroomCoord = [geometry_x, geometry_y];
+ 
     // Set the view to this feature
-    map.getView().setCenter(ol.proj.transform(coords, 'EPSG:4326', 'EPSG:3857')); 
-   // How to highlight the mushroom finding location (existing feature)? 
-   //return coords
+    map.getView().setCenter(ol.proj.transform(closestMushroomCoord, 'EPSG:4326', 'EPSG:3857'));
+    map.getView().setZoom(14);
+
+    
+    // Find the matching feature from the existing layer
+    // The problem is that these feature coordinates are from the extent of the inital screen and not from the extent were our feature is...
+    style = new ol.style.Style({
+      image: new ol.style.Circle({
+	fill: new ol.style.Fill({color: 'red'}),
+	radius: 20
+      })
+    });
    
+    // Vector source has to requested again
+    features = vectorSource.getFeatures();
+    for (var i = 0; i < features.length; i++) {
+      lat = features[i].get('lat');
+      lon = features[i].get('lon');
+      feature = features[i]
+      if (lat == geometry.y && lon == geometry.x) {
+	// Finds a match after second refresh
+	selectInteraction.getFeatures().push(feature);
+	feature.setStyle(style);
+  	break
+      } else { 
+	continue 
+      }
+    }
+    
   });
 
   request.fail(function(jqXHR, textStatus, state) {

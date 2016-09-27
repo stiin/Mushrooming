@@ -21,10 +21,12 @@
 
     <!-- Application dependent files + WKX & Sidebar plugins -->
     <script type="text/javascript" src="/javascripts/map.js"></script>
+    <script type="text/javascript" src="/javascripts/geolocation.js"></script>
     <script type="text/javascript" src="/javascripts/routing.js"></script>
     <script type="text/javascript" src="/javascripts/query_functions.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-sidebar.js"></script>
     <script type="text/javascript" src="/javascripts/wkx.js"></script>
+
     <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
     <link rel="stylesheet" href="/stylesheets/ol_popup.css" type="text/css">    
     <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css" type="text/css">
@@ -32,7 +34,7 @@
   </head>
 
   <!-- Every time when a page is opened these functions are initialized -->
-  <body onload="initMap(); routing()">  	
+  <body onload="initMap(); routing(); geolocation()">  	
    
     <div id="sidebar" class="sidebar collapsed">
         
@@ -42,12 +44,13 @@
 	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
 	      <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
 	      <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
+	      <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
         </ul>
 
 	    <ul role="tablist">
 	      <li><a href="#sign_out" role="tab"><i class="fa fa-sign-out"></i></a></li>
 	    </ul>
-      </div>
+        </div>
 
       <!-- Tab panes -->
       <div class="sidebar-content">
@@ -61,17 +64,13 @@
 	
           <!-- Buttons for different EventHandlers -->
 	      <br>
-	      <p>Routing functions:</p>
-	      <br>
-          <button id="start">start location</button>
-	      <br>
-          <button id="dest">destination location</button>
-          <br>
-          <button id="navigate">calculate route</button>  
-          <br>
-          <button id="clear">clear route</button>
-          <br><br>
-	      <p>Does not work on Chrome!</p> 
+	      <p><b>Routing functions:</b></p><br>
+          <button id="start">start location</button><br>
+          <button id="dest">destination location</button><br>
+          <button id="navigate">calculate route</button><br>
+          <button id="clear">clear route</button><br><br>
+
+	      <p><b>Does not work on Chrome!</b></p> 
           <button id="locate">locate me</button>
 	    
 	    </div>
@@ -84,11 +83,26 @@
 	      </h1>
 	
 	      <br>
-	      <p>Testing functions</p>
-	      <br>
+	      <p><b>Testing functions</b></p><br>
 	      <button onclick="getAllFindings()">getAllFindings</button>
 	      <br>
 	      <button onclick="getClosestDesiredMushroom(18.068390, 59.320579, 'kantarell')">getClosestDesiredMushroom</button>
+	      <br><br>
+
+	      <p><b>Functions to be implemented</b></p><br>
+
+	      <p>Find mushrooms of a specific type</p>
+	      <select id="mushroomType" onchange="getClosestDesiredMushroom(18.068390, 59.320579, this.value)">
+	        <option value="">Pick a mushroom species</option>
+  	        <option value="kantarell">Kantarell</option>
+	        <option value="punktplätt">Punktplätt</option>
+	        <option value="alticka">Alticka</option>
+	        <option value="vårplätt">Vårplätt</option>
+	        <option value="tårticka">Tårticka</option>
+	      </select><br><br>
+
+	      <p>Find the closest mushroom of specific type andd the shorthest path there</p><br>
+	      <p>Find all mushrooms you can reach within a given time at a certain speed</p>	    
 
 	    </div>
 
@@ -103,6 +117,18 @@
 	      <p>Here maybe some functions to add and manipulate mushroom findings...</p>
 
   	    </div>
+
+	    <!-- sidebar content for the mushroom info -->
+	    <div class="sidebar-pane" id="info">
+	      <h1 class="sidebar-header">
+	        Mushroom info!
+	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+	      </h1>
+
+	      <br>
+	      <p id="mushroominfo">Select mushrooms to get info...</p>
+
+        </div>
 
 	    <!-- sidebar content sign out -->
 	    <div class="sidebar-pane" id="sign_out">

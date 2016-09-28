@@ -35,7 +35,7 @@
   </head>
 
   <!-- Every time when a page is opened these functions are initialized -->
-  <body onload="initMap(); routing(); geolocation()">  	
+  <body onload="initMap(); routing();">
    
     <div id="sidebar" class="sidebar collapsed">
         
@@ -135,7 +135,7 @@
               <td><font size="3">Auto fetch location</font></td>
               <td>
           <div class="onoffswitch">
-              <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+              <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
               <label class="onoffswitch-label" for="myonoffswitch">
                   <span class="onoffswitch-inner"></span>
                   <span class="onoffswitch-switch"></span>

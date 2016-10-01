@@ -40,13 +40,16 @@ var userCoords;
 // onClick Function
 var hasbeenchecked = false;
 
-
 function updatePositionMap(){
     var coordinate = geolocation.getPosition();
     console.log("Current Location is:" + coordinate);
     //view.setZoom(14);
+    //var acc = geolocation.getAccuracyGeometry();
+    if(acc != null) {
+        console.log(acc);
+        accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+    }
     view.setCenter(coordinate);
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
 }
 
 function positionUpdatingError(error){
@@ -58,11 +61,10 @@ function autoLocationClicked(checkbox){
         hasbeenchecked = true;
 
         geolocation = new ol.Geolocation({
-            //projection: map.getView().getProjection(),
             projection: map.getView().getProjection(),
             tracking: true,
             trackingOptions: {
-              enableHighAccuracy: true
+             enableHighAccuracy: true
             }
         });
 
@@ -82,10 +84,11 @@ function autoLocationClicked(checkbox){
         geolocation.on('error', positionUpdatingError);
 
     }
-    else{
+    else {
         if (hasbeenchecked)
             checkbox.checked = false;
         //accuracyBuffer.removeFeature(accuracyFeature);
+        if (typeof geolocation !== 'undefined') {
         geolocation.un('change:position', updatePositionMap);
         console.log("Auto Location has been turned off");
 
@@ -93,6 +96,6 @@ function autoLocationClicked(checkbox){
         map.removeLayer(accuracyBuffer);
 
         geolocation.un('error', positionUpdatingError);
-
+        }
     }
 }

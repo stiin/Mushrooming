@@ -2,15 +2,42 @@ var map;
 var sidebar;
 var selectedFeatureCoords;
 var vectorSource;
+var feature;
+
+(function() {
+  var cors_api_host = 'cors-anywhere.herokuapp.com';
+  var cors_api_url = 'https://' + cors_api_host + '/';
+  var slice = [].slice;
+  var origin = window.location.protocol + '//' + window.location.host;
+  var open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function() {
+    var args = slice.call(arguments);
+    var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+    if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
+      targetOrigin[1] !== cors_api_host) {
+        args[1] = cors_api_url + args[1];
+      }
+    return open.apply(this, args);
+  };
+})();
+
 
 // Now includes initializing of map, layers and their interaction (WFS), popup
-function initMap() {     
+function initMap() {
+	
+	// Create the Slick carousel
+	$('.mushroomcarousel').slick({
+	  dots: true,
+	  mobileFirst: true
+	  //revArrow: $('.slick-prev'),
+      //nextArrow: $('.slick-next')
+	});
 
     var popupContainer = document.getElementById('popup');
     var popupContent = document.getElementById('popup-content');
     var popupCloser = document.getElementById('popup-closer');
     var mushroomInfo = document.getElementById('mushroominfo');
-
+ 
     var popup = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
       element: popupContainer,
       autoPan: true,
@@ -22,7 +49,7 @@ function initMap() {
     popupCloser.onclick = function() {
       popup.setPosition(undefined); 
       popupCloser.blur();
-      return false
+      return false;
     };
 
     
@@ -30,7 +57,7 @@ function initMap() {
     vectorSource = new ol.source.Vector({
       format: new ol.format.GeoJSON(),
       url: function(extent, resolution, projection) {
-        return "/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:mushroom_findings&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') + 
+        return "http://www.stiin.se/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:mushroom_findings&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') + 
 	",'EPSG:3857'" + "))";
       },
       strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -40,7 +67,7 @@ function initMap() {
     
     // Making clusters out of the mushroom finding geojson points
     var mushroom_cluster = new ol.source.Cluster({
-      distance: 40, //Trying to avoid too close cluster centers, default 20
+      distance: 10, //Too large distances involve too many features into clusters, default 20
       source: vectorSource
     });
 
@@ -98,78 +125,110 @@ function initMap() {
     mushroom_clusterLayer.set('selectable', true); 
   
 
-
     // Creates a popup everytime a user click on the map. if the click is not a feature don't add a popup
     map.on('click', function(event) {
-      var feature = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-	return feature;
+      feature = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
+	    return feature;
       });
       
-      // Reset the content
+      // Reset the popup content and remove all of the carousel slides
       popupContent.innerHTML = "";
-      mushroomInfo.innerHTML = "";      
-
+ 	  $('.mushroomcarousel').slick('removeSlide', null, null, true);
+ 
       // if the map click is on feature
       if (feature) {
-
-	// Add popup overlay and get the clicked feature coordinates as a variable
-	map.addOverlay(popup);		
+	 
+	    // Add popup overlay and get the clicked feature coordinates as a variable
+	    map.addOverlay(popup);		
         selectedFeatureCoords = feature.getGeometry().getCoordinates();
 
-	// Forming the content of a popup
-	popupContent.innerHTML = "<b>Mushroom species:</b> " + "<br><ul>"
+	    // Forming the content of a popup
+	    popupContent.innerHTML = "<b>Mushroom species:</b> " + "<br><ul>";
 
-	// Loops through every feature in the cluster
-	uniqueCheckArray = [];
-	features = feature.get('features');
-	for (var i = 0; i < features.length; i++) {
-
-	  // Attribute information for every mushroom finding
-	  mushroom_name = features[i].get('name');
-	  finding_place = features[i].get('finding_place');	  
-	  precision = features[i].get('precision');
-	  quantity = features[i].get('quantity');
-	  comment = features[i].get('comment');
-
-	  // Checking if the same name is occuring twice in the same feature
-	  if (uniqueCheckArray.indexOf(mushroom_name) > -1) {
-	    continue
-	  } else {
-	    uniqueCheckArray.push(mushroom_name);
-            popupContent.innerHTML += "<li>" + mushroom_name + "</li>";
-	    mushroomInfo.innerHTML += 
-		"<b>Mushroom species: </b>" + mushroom_name + "<br>" +
-	  	"<li>" + "Finding place: " + finding_place + "</li>" + 
-		"<li>" + "Precision: " + precision + "</li>" + 
-		"<li>" + "Quantity: " + quantity + "</li>" + 
-		"<li>" + "Comment: " + comment + "</li><hr>";
-	  }
+	    // Loops through every feature in the cluster
+	    uniqueCheckArray = [];
+	    features = feature.get('features');
+	    
+	    // Problem is that the dataset has mushroom findings that has ridiculous amounts of findings of different mushroom type in one location
+	    if (features.length > 10) {
+	      popupContent.innerHTML = "Try to zoom closer to the features...";
+	    } else {
+	      for (var i = 0; i < features.length; i++) {
+	        // Attribute information for the mushroom finding name
+	        mushroom_name = features[i].get('name');
+	      
+	        // Checking if the same name is occuring twice in the same feature
+	        if (uniqueCheckArray.indexOf(mushroom_name) > -1) {
+	          continue;
+	        } else {
+	      	  uniqueCheckArray.push(mushroom_name);
+	      	
+	      	  // Attribute information for the rest mushroom findings
+	      	  finding_place = features[i].get('finding_place');
+	          precision = features[i].get('precision');
+	          quantity = features[i].get('quantity');
+	          comment = features[i].get('comment');
+	          biotope = features[i].get('biotope');
+	          date = features[i].get('date');
+	        
+	          // Create the HTML content, links with mushroom names
+              popupContent.innerHTML += "<li>" + '<a id=' + mushroom_name + ' href="javascript:void(0);" class="mushroom" onclick="handleMushroomLinks(this);">' + mushroom_name + "</a>" + "</li>";
+	        
+			  // In future image for every mushroom, naming with the correct mushroom name
+  	  	      image = "mushroom";
+      	      species = mushroom_name.toUpperCase();
+      	
+      	      //mushroomInfoTest.innerHTML =
+	          mushroomInfo = "<div><h3 align='center'>" + species + "</h3><br>" +
+                '<center><img src="/images/' + image + '.jpg" style="width:100px;height:100px;"></center>' + "<br><hr>" +
+	            "<p><b>Date: </b>" + date + "</p>" +
+	            "<p><b>Quantity: </b>" + quantity + "</p>" + 
+ 	            "<p><b>Finding place: </b>" + finding_place + "</p>" + 
+	            "<p><b>Precision: </b>" + precision + "</p>" + 
+		        "<p><b>Biotope: </b>" + biotope + "</p>" +
+		        "<p><b>Comment: </b>" + comment + "</p></div>";
+		
+	          $('.mushroomcarousel').slick('slickAdd', mushroomInfo);
+		    
+	        }
+          }
         }
-
-	popupContent.innerHTML += "</ul><br>" + '<button onclick="openSidebar()">Open more info!</button>' + ' <button onclick="closeSidebar()">Close info!</button>'; 
-
-	// Problem is that the dataset has mushroom findings that has ridiculous amounts of findings of different mushroom type in one location
-	if (uniqueCheckArray.length > 20) {
-	  popupContent.innerHTML = "Try to zoom closer to the features...";
-	}
-
-	// Set the popup to the map with the feature coordinates
-	popup.setPosition(selectedFeatureCoords);
+    
+    	// Closing the popup content
+        popupContent.innerHTML += "</ul>";
+		
+	    // Set the popup to the map with the feature coordinates
+	    popup.setPosition(selectedFeatureCoords);
 
       } else {
-	// if the click isn't a feature remove the popup
- 	map.removeOverlay(popup);
-	sidebar.close("info");
+	    // if the click isn't a feature remove the popup
+ 	    map.removeOverlay(popup);
+	    sidebar.close("info");
       }
     });
 
 }
 
+function handleMushroomLinks(link) {
+	
+	// Idea is to go through every feature to find the matching one for the link id
+	// This is because then the clicked link is matched to the correct mushroom info according to the mushroom species
+	features = feature.get('features');
+	for (var i = 0; i < features.length; i++) {
+	  // Attribute information for every mushroom finding
+	  mushroom_name = features[i].get('name');
 
-function openSidebar() {
-  sidebar.open("info");
+	  // If the link name is the same as the mushroom name
+	  if (mushroom_name.indexOf(link.id) !== -1) {
+	  	
+	  	// Change to the carousel view to the link clicked one
+	  	$('.mushroomcarousel').slick('slickGoTo', i);
+      	sidebar.open("info");
+	    break;
+	    
+      } else {
+        continue;
+      }
+	}
 }
 
-function closeSidebar() {
-  sidebar.close("info");
-}

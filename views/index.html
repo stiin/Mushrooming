@@ -1,8 +1,8 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <title>Mushrooming!</title>
+	<meta charset="UTF-8">
 
     <!-- Fits the content better on mobile devices -->		
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,37 +12,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.18.2/ol.css" type="text/css">
 
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>    
 
     <!-- Bootstrap + Awesome Fonts -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Application dependent files + WKX & Sidebar plugins -->
-<<<<<<< HEAD
-    <script type="text/javascript" src="/javascripts/map.js"></script>
-    <script type="text/javascript" src="/javascripts/geolocation.js"></script>
-    <script type="text/javascript" src="/javascripts/routing.js"></script>
-    <script type="text/javascript" src="/javascripts/query_functions.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery-sidebar.js"></script>
-    <script type="text/javascript" src="/javascripts/wkx.js"></script>
+	<!-- Slick Carousel plugin -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
 
-=======
-    <script type="text/javascript" src="/javascript/map.js"></script>
-    <script type="text/javascript" src="/javascript/routing.js"></script>
-    <script type="text/javascript" src="/javascript/query_functions.js"></script>
-    <script type="text/javascript" src="/javascript/jquery-sidebar.js"></script>
-    <script type="text/javascript" src="/javascript/wkx.js"></script>
->>>>>>> 92531e869ec125de0c0c89e669c78d53514526a7
-    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
-    <link rel="stylesheet" href="/stylesheets/ol_popup.css" type="text/css">    
-    <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css" type="text/css">
+    <!-- Application dependent files + WKX & Sidebar plugins -->
+    <script src="/javascript/map.js"></script>
+    <script src="/javascript/geolocation.js"></script>
+    <script src="/javascript/routing.js"></script>
+    <script src="/javascript/query_functions.js"></script>
+    <script src="/javascript/jquery-sidebar.js"></script>
+    <script src="/javascript/wkx.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/ol_popup.css">    
+    <link rel="stylesheet" href="/stylesheets/ol3-sidebar.css">
+    <link rel="stylesheet" href="/stylesheets/onoffswitch.css">
 
   </head>
 
   <!-- Every time when a page is opened these functions are initialized -->
-  <body onload="initMap(); routing(); geolocation()">  	
+  <body onload="initMap(); routing()">  	
    
     <div id="sidebar" class="sidebar collapsed">
         
@@ -52,7 +50,7 @@
 	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
 	      <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
 	      <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
-	      <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
+	      <li><a href="#location_settings" role="tab"><i class="fa fa-cog "></i></a></li>
         </ul>
 
 	    <ul role="tablist">
@@ -90,29 +88,37 @@
 	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
 	      </h1>
 	
-	      <br>
-	      <p><b>Testing functions</b></p><br>
-	      <button onclick="getAllFindings()">getAllFindings</button>
-	      <br>
-	      <button onclick="getClosestDesiredMushroom(18.068390, 59.320579, 'kantarell')">getClosestDesiredMushroom</button>
-	      <br><br>
+	      <br><p><b>Testing functions</b></p><br>
+	      <button onclick="getAllFindings()">getAllFindings</button><br>
+	      <button onclick="getClosestDesiredMushroom(18.068390, 59.320579, 'kantarell')">getClosestDesiredMushroom</button><br><br>
 
 	      <p><b>Functions to be implemented</b></p><br>
 
-	      <p>Find mushrooms of a specific type</p>
-	      <select id="mushroomType" onchange="getClosestDesiredMushroom(18.068390, 59.320579, this.value)">
-	        <option value="">Pick a mushroom species</option>
-  	        <option value="kantarell">Kantarell</option>
-	        <option value="punktplätt">Punktplätt</option>
-	        <option value="alticka">Alticka</option>
-	        <option value="vårplätt">Vårplätt</option>
-	        <option value="tårticka">Tårticka</option>
-	      </select><br><br>
+	      <button onclick="sidebar.open('function1');">
+		  	<div>
+		  		<br><p>Find the closest mushroom of specific type</p><br>
+		  	</div>
+		  </button>
+ 
+		  <br><br>
 
-	      <p>Find the closest mushroom of specific type andd the shorthest path there</p><br>
-	      <p>Find all mushrooms you can reach within a given time at a certain speed</p>	    
+		  <button onclick="sidebar.open('function2');">
+		  	<div>
+		  		<br><p>Find the closest mushroom of specific type and the shorthest path there</p><br>
+		  	</div>
+		  </button>
+ 
+          <br><br>
+
+	      <button onclick="sidebar.open('function3');">
+		  	<div>
+		  		<br><p>Find all mushrooms you can reach within a given time at a certain speed</p><br>
+		  	</div>
+		  </button>
+	      	    
 
 	    </div>
+
 
 	    <!-- sidebar content you findings -->
 	    <div class="sidebar-pane" id="your_findings">
@@ -125,7 +131,41 @@
 	      <p>Here maybe some functions to add and manipulate mushroom findings...</p>
 
   	    </div>
+  	    
+  	    
+  	    <!-- sidebar content LocationSettings -->
+        <div class="sidebar-pane" id="location_settings">
+          <h1 class="sidebar-header">
+            Location Settings
+            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+          </h1>
 
+          <br>
+
+
+		  <p>**Location Settings (Auto/Manual)</p>
+      	  <table width="100%">
+            <tr>
+              <td><font size="3">Auto fetch location</font></td>
+              <td>
+                <div class="onoffswitch">
+                  <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+                  <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><font size="3">Set Location Manually</font></td>
+              <td></td>
+            </tr>
+          </table>
+
+        </div>
+  	    
+  	    
 	    <!-- sidebar content for the mushroom info -->
 	    <div class="sidebar-pane" id="info">
 	      <h1 class="sidebar-header">
@@ -133,10 +173,97 @@
 	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
 	      </h1>
 
-	      <br>
-	      <p id="mushroominfo">Select mushrooms to get info...</p>
+		  <br>
 
+		  <!-- Buttons for operating the carousel, also works with swiping
+		  <div class="carousel-buttons" align="center">
+		    <button type="button" class="slick-prev">Previous</button>
+		    <button type="button" class="slick-next">Next</button>
+		  </div>-->
+		  
+		  <!-- Carousell is added as a div with no content -->
+		  <div class="mushroomcontainer">
+		    <div class="mushroomcarousel"></div>
+		  </div>
+		    
         </div>
+
+
+		<!-- sidebar content for function 1 -->
+	    <div class="sidebar-pane" id="function1">
+	      <h1 class="sidebar-header"></h1>
+	      
+	      <br>
+	      
+	      <p>Find mushrooms of a specific type</p>
+	      <select id="mushroomType">
+	        <option value="undefined">Pick a mushroom species</option>
+  	        <option value="kantarell">Kantarell</option>
+	        <option value="punktplätt">Punktplätt</option>
+	        <option value="alticka">Alticka</option>
+	        <option value="vårplätt">Vårplätt</option>
+	        <option value="tårticka">Tårticka</option>
+	      </select>
+	      
+	      <br><br>
+	    
+	      <button onclick="getClosestDesiredMushroom(18.068390, 59.320579)">Search</button>
+	      <button onclick="sidebar.open('find_mushrooms');">Abort</button>
+	      
+        </div>
+		<!-- sidebar content for function 2 -->
+	    <div class="sidebar-pane" id="function2">
+	      <h1 class="sidebar-header"></h1>
+	      
+	      <br>
+	      
+	      <p>Find the closest mushroom of specific type and the shorthest path there</p>
+	      <select id="mushroomType" onchange="">
+	        <option value="">Pick a mushroom species</option>
+  	        <option value="kantarell">Kantarell</option>
+	        <option value="punktplätt">Punktplätt</option>
+	        <option value="alticka">Alticka</option>
+	        <option value="vårplätt">Vårplätt</option>
+	        <option value="tårticka">Tårticka</option>
+	      </select>
+	      
+	      <br><br>
+	    
+	      <button onclick="">Search</button>
+	      <button onclick="sidebar.open('find_mushrooms');">Abort</button>
+	      
+	
+        </div>
+		<!-- sidebar content for function 3 -->
+	    <div class="sidebar-pane" id="function3">
+	      <h1 class="sidebar-header"></h1>
+	      
+	      <br>
+	      
+	      <p>Find all mushrooms you can reach within a given time at a certain speed</p>
+	      <select id="time" onchange="">
+	        <option value="">Pick a time (min)</option>
+  	        <option value="10">10</option>
+  	        <option value="20">20</option>
+  	        <option value="30">30</option>
+  	        <option value="40">40</option>
+	      </select>
+	      
+	      <select id="speed" onchange="">
+	        <option value="">Pick a speed (km/h)</option>
+  	        <option value="4">4</option>
+  	        <option value="6">6</option>
+  	        <option value="8">8</option>
+  	        <option value="10">10</option>
+	      </select>
+	      
+	      <br><br>
+	    
+	      <button onclick="">Search</button>
+	      <button onclick="sidebar.open('find_mushrooms');">Abort</button>
+	     
+        </div>
+
 
 	    <!-- sidebar content sign out -->
 	    <div class="sidebar-pane" id="sign_out">
@@ -144,14 +271,11 @@
 	        Sign Out!
 	        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
 	      </h1>
-		
-	      <br>
-	      <p>Here can be some user information and create, login and sign out functionalities</p>
-
+	      <br><p>Here can be some user information and create, login and sign out functionalities</p>
 	    </div>
 
       </div>
-
+      
     </div>
 
     <!-- Map container -->
@@ -162,7 +286,7 @@
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
     </div>
-				
+	
   </body>
 </html>
 

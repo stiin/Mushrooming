@@ -7,7 +7,7 @@ function routing() {
     params = {
       LAYERS: 'pgrouting:pgrouting',
       FORMAT: 'image/png'
-    }
+    };
 
     // The "start" and "destination" features.
     var startPoint = new ol.Feature();
@@ -99,25 +99,25 @@ function routing() {
         // Determines the extent of the view according to the coordinates of the points
         if (start[0] < end[0]) { 
           minx = start[0]; 
-	  maxx = end[0];
+	      maxx = end[0];
         } else {
           minx = end[0];
-  	  maxx = start[0];
+  	      maxx = start[0];
         }
 	
         if (start[1] < end[1]) {
-	  miny = start[1];
-	  maxy = end[1];
+	      miny = start[1];
+	      maxy = end[1];
         } else {
-	  miny = end[1];
-	  maxy = start[1];
+	      miny = end[1];
+	      maxy = start[1];
         }
 
         r_padding = [150, 150, 150, 150];
         extent = [minx, miny, maxx, maxy];
         map.getView().fit(extent, map.getSize(), {
- 	  padding: r_padding,
-	  constrainResolution: false
+ 	      padding: r_padding,
+	      constrainResolution: false
         });
       }
     });

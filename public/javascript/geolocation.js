@@ -1,7 +1,7 @@
 var userCoords;
 
 // Obtaining the users geolocation when user initializes the locate eventlistener, doesn't work in Chrome!
-function geolocation() {
+/*function geolocation() {
 
   var geolocation, accuracyFeature, accuracyBuffer;
   var locateButton = document.getElementById('locate');
@@ -35,4 +35,67 @@ function geolocation() {
     console.log(error);
   });
 
+}*/
+
+// onClick Function
+var hasbeenchecked = false;
+
+function updatePositionMap(){
+    var coordinate = geolocation.getPosition();
+    console.log("Current Location is:" + coordinate);
+    //view.setZoom(14);
+    //var acc = geolocation.getAccuracyGeometry();
+    if(acc != null) {
+        console.log(acc);
+        accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+    }
+    view.setCenter(coordinate);
+}
+
+function positionUpdatingError(error){
+    console.log(error);
+}
+
+function autoLocationClicked(checkbox){
+    if (checkbox.checked) {
+        hasbeenchecked = true;
+
+        geolocation = new ol.Geolocation({
+            projection: map.getView().getProjection(),
+            tracking: true,
+            trackingOptions: {
+             enableHighAccuracy: true
+            }
+        });
+
+        accuracyFeature = new ol.Feature();
+        accuracyBuffer = new ol.layer.Vector({
+            map: map,
+            source: new ol.source.Vector({
+                features: [accuracyFeature]
+            })
+        });
+
+        //map.addLayer(accuracyBuffer);
+
+        geolocation.on('change:position', updatePositionMap);
+        console.log("Auto Location has been turned on");
+
+        geolocation.on('error', positionUpdatingError);
+
+    }
+    else {
+        if (hasbeenchecked)
+            checkbox.checked = false;
+        //accuracyBuffer.removeFeature(accuracyFeature);
+        if (typeof geolocation !== 'undefined') {
+        geolocation.un('change:position', updatePositionMap);
+        console.log("Auto Location has been turned off");
+
+        accuracyBuffer.getSource().clear();
+        map.removeLayer(accuracyBuffer);
+
+        geolocation.un('error', positionUpdatingError);
+        }
+    }
 }

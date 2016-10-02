@@ -26,11 +26,11 @@
 
     <!-- Application dependent files + WKX & Sidebar plugins -->
     <script src="/javascript/map.js"></script>
-    <script src="/javascript/geolocation.js"></script>
     <script src="/javascript/routing.js"></script>
     <script src="/javascript/query_functions.js"></script>
     <script src="/javascript/jquery-sidebar.js"></script>
     <script src="/javascript/wkx.js"></script>
+    <script src="/javascript/geolocation.js"></script>
 
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/ol_popup.css">    
@@ -40,7 +40,7 @@
   </head>
 
   <!-- Every time when a page is opened these functions are initialized -->
-  <body onload="initMap(); routing()">  	
+  <body onload="initMap(); routing();">
    
     <div id="sidebar" class="sidebar collapsed">
         
@@ -50,7 +50,7 @@
 	      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
 	      <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
 	      <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
-	      <li><a href="#location_settings" role="tab"><i class="fa fa-cog "></i></a></li>
+          <li><a href="#location_settings" role="tab"><i class="fa fa-cog "></i></a></li>
         </ul>
 
 	    <ul role="tablist">
@@ -142,8 +142,7 @@
 
           <br>
 
-
-		  <p>**Location Settings (Auto/Manual)</p>
+		  <p>**Location Settings (Auto/Manual)
       	  <table width="100%">
             <tr>
               <td><font size="3">Auto fetch location</font></td>
@@ -162,6 +161,7 @@
               <td></td>
             </tr>
           </table>
+          </p>
 
         </div>
   	    

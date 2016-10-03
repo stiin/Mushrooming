@@ -1,55 +1,22 @@
 var userCoords;
 
-// Obtaining the users geolocation when user initializes the locate eventlistener, doesn't work in Chrome!
-/*function geolocation() {
-
-  var geolocation, accuracyFeature, accuracyBuffer;
-  var locateButton = document.getElementById('locate');
-
-  geolocation = new ol.Geolocation({
-    trackingOptions: {
-      enableHighAccuracy: true
-    },
-    projection: view.getProjection(),
-    tracking: true
-  });	
-
-  accuracyFeature = new ol.Feature();
-  accuracyBuffer = new ol.layer.Vector({
-    map: map,
-    source: new ol.source.Vector({
-      features: [accuracyFeature]
-    })
-  });
-
-  map.addLayer(accuracyBuffer); 
-
-  locateButton.addEventListener('click',function(event) {
-    userCoords = geolocation.getPosition();
-    view.setZoom(14);
-    view.setCenter(userCoords);
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-  });
-
-  geolocation.on('error', function(error) {
-    console.log(error);
-  });
-
-}*/
-
 // onClick Function
 var hasbeenchecked = false;
+var hasbeencentered = false;
 
 function updatePositionMap(){
     var coordinate = geolocation.getPosition();
     console.log("Current Location is:" + coordinate);
-    //view.setZoom(14);
-    //var acc = geolocation.getAccuracyGeometry();
+
+    var acc = geolocation.getAccuracyGeometry();
     if(acc != null) {
-        console.log(acc);
         accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
     }
-    view.setCenter(coordinate);
+    
+    if(!hasbeencentered) {
+        view.setCenter(coordinate);
+        hasbeencentered = true;
+    }
 }
 
 function positionUpdatingError(error){
@@ -76,18 +43,16 @@ function autoLocationClicked(checkbox){
             })
         });
 
-        //map.addLayer(accuracyBuffer);
-
         geolocation.on('change:position', updatePositionMap);
         console.log("Auto Location has been turned on");
 
         geolocation.on('error', positionUpdatingError);
+        drawRoute();
 
     }
     else {
         if (hasbeenchecked)
             checkbox.checked = false;
-        //accuracyBuffer.removeFeature(accuracyFeature);
         if (typeof geolocation !== 'undefined') {
         geolocation.un('change:position', updatePositionMap);
         console.log("Auto Location has been turned off");
@@ -98,4 +63,67 @@ function autoLocationClicked(checkbox){
         geolocation.un('error', positionUpdatingError);
         }
     }
+}
+
+// pk.eyJ1Ijoic3RpaW4iLCJhIjoiY2l0NnpsN2h5MDAwZjJ1bWZjOGg1d2ltOSJ9.SolRo3rDm25r9tXBTKrnoQ
+
+function navigateToMush(lat,lon){
+
+}
+
+// from example
+
+accessToken = 'pk.eyJ1Ijoic3RpaW4iLCJhIjoiY2l0NnpsN2h5MDAwZjJ1bWZjOGg1d2ltOSJ9.SolRo3rDm25r9tXBTKrnoQ';
+
+function drawRoute() {
+    console.log("start drawRoute");
+    var points = "17.813372,59.454118;17.798343,59.450776"
+    var directionsUrl = 'http://api.tiles.mapbox.com/v4/directions/mapbox.driving/' +
+        points + '.json?access_token=' + accessToken;
+    $.get(directionsUrl, function(data) {
+        var route = data.routes[0].geometry.coordinates;
+        route = route.map(function(point) {
+            return [point[1], point[0]];
+        });
+
+        var multiP  = new ol.geom.MultiPoint();
+        var transed = [];
+        for (var i=0;i<route.length;i++) {
+
+            var pos = [route[i][1],route[i][0]];
+
+            pos = ol.proj.fromLonLat(pos);
+            transed.push(pos);
+            console.log('xy: ' + pos);
+            var geomPoint = new ol.geom.Point(pos);
+            multiP.appendPoint(geomPoint);
+        }
+
+        console.log("result was " + route);
+
+        var
+            vectorSource = new ol.source.Vector(),
+            vectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+
+        var routePath = new ol.format.Polyline({
+        }).readGeometry(multiP);
+        routePath.flatCoordinates = multiP.flatCoordinates;
+        var feature = new ol.Feature({
+            type: 'route',
+            geometry: routePath
+        });
+
+        var routeStyle = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                width: 4, color: [255, 0, 0, 0.9]
+            })
+        })
+
+        feature.setStyle(routeStyle);
+        vectorSource.addFeature(feature);
+        map.addLayer(vectorLayer);
+        view.setCenter(pos);
+    });
 }

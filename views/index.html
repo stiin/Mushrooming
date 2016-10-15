@@ -44,8 +44,9 @@
   </head>
 
   <!-- Every time when a page is opened these functions are initialized -->
-  <body onload="initMap(); routing();">
-   
+  <body onload="initMap(); routing(); autoLocationClicked(document.getElementById('myonoffswitch'));">
+
+
     <div id="sidebar" class="sidebar collapsed">
         
 	  <!-- Nav tabs -->
@@ -79,6 +80,8 @@
           <button id="dest">destination location</button><br>
           <button id="navigate">calculate route</button><br>
           <button id="clear">clear route</button><br><br>
+
+		  <button onclick="navigation()">NAVIGATION</button><br>
 
 	      <p><b>Does not work on Chrome!</b></p> 
           <button id="locate">locate me</button>
@@ -290,7 +293,9 @@
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
     </div>
-	
+
+
+
   </body>
 </html>
 

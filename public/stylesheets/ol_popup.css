@@ -40,3 +40,7 @@
 .ol-popup-closer:after {
   content: "✖";
 }
+
+ul {
+  padding-left: 1.2em;
+}

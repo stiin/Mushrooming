@@ -1,12 +1,11 @@
-// Creating connection to PostgreSQL/PostGIS database
 var pg = require('pg');
 
-// This has to changes according to the hermes2.infa.kth.se database
-var host ='188.166.65.138'; 
+var host = '188.166.65.138';
 var port ='5432';
 var dbName = 'mushroom';
 
 var connectionString = 'postgres://mush:mush@'+host+':'+port+'/'+dbName;
+
 
 // Export the connection string for usage by the API
 module.exports = connectionString;

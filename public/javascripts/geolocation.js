@@ -1,4 +1,4 @@
-var userCoords;
+userCoords = null;
 
 // onClick Function
 var hasbeenchecked = false;
@@ -6,6 +6,7 @@ var hasbeencentered = false;
 
 function updatePositionMap(){
     var coordinate = geolocation.getPosition();
+    userCoords = geolocation.position_;
     console.log("Current Location is:" + coordinate);
 
     var acc = geolocation.getAccuracyGeometry();
@@ -66,14 +67,15 @@ function autoLocationClicked(checkbox){
 
 ///////////////////////////////////////////////////////////////////////////////////
 // coord should be strings
-function navigateToMush(startLat, startLon, endLat, endLon, travelMode){
+function navigateToMush(startLat, startLon, endLat, endLon, travelMode, drawRoute){
     var mode = [travelMode];// walking,driving,cycling + driving can integrate to pg routing
 
     var points = startLat + "," + startLon + ";" + endLat + "," + endLon; //"17.813372,59.454118;17.798343,59.450776" //"startLon,startLat;endLon,endLat"
 
 // You need to edit the url for each mode /mapbox.@@@
-    var directionsUrl = 'http://api.tiles.mapbox.com/v4/directions/mapbox.' + travelMode + '/' +
+    var directionsUrl = 'https://api.tiles.mapbox.com/v4/directions/mapbox.' + travelMode + '/' +
         points + '.json?access_token=' + accessToken;
+    console.log("Directionsurl: " + directionsUrl);
     $.get(directionsUrl, function(data) {
         var route = data.routes[0].geometry.coordinates;
         route = route.map(function(point) {
@@ -88,24 +90,31 @@ function navigateToMush(startLat, startLon, endLat, endLon, travelMode){
 
             pos = ol.proj.fromLonLat(pos);
             transed.push(pos);
-            console.log('xy: ' + pos);
+
             var geomPoint = new ol.geom.Point(pos);
             multiP.appendPoint(geomPoint);
         }
 
         console.log("result was " + route);
+        centerPos = ((startLat + endLat)/2)
 
-        return multiP;
+        if(drawRoute){
+            drawMultiplePointsRoute(multiP);
+        }
     });
 }
 
+var vectorLayer = null;
 function drawMultiplePointsRoute(multiP){
 
-        var
-            vectorSource = new ol.source.Vector(),
-            vectorLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
+    if(vectorLayer != null){
+        map.removeLayer(vectorLayer);
+    }
+
+    var vectorSource = new ol.source.Vector();
+        vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
 
         var routePath = new ol.format.Polyline({
         }).readGeometry(multiP);
@@ -123,8 +132,10 @@ function drawMultiplePointsRoute(multiP){
 
         feature.setStyle(routeStyle);
         vectorSource.addFeature(feature);
+
         map.addLayer(vectorLayer);
-        view.setCenter(pos);
+
+        //view.setCenter(centerPos);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // You need to add this to the index.html:
@@ -136,66 +147,4 @@ function drawMultiplePointsRoute(multiP){
 accessToken = 'pk.eyJ1Ijoic3RpaW4iLCJhIjoiY2l0NnpsN2h5MDAwZjJ1bWZjOGg1d2ltOSJ9.SolRo3rDm25r9tXBTKrnoQ';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-function drawRoute() {
-    console.log("start drawRoute");
-    // Location Initial Setting //
-    var startLat;
-    var startLon;
-    var endLat;
-    var endLon;
-    var mode = [];// walking,driving,cycling + driving can integrate to pg routing
-
-    var points = "17.813372,59.454118;17.798343,59.450776" //"startLon,startLat;endLon,endLat"
-
-// You need to edit the url for each mode /mapbox.@@@
-    var directionsUrl = 'http://api.tiles.mapbox.com/v4/directions/mapbox.walking/' +
-        points + '.json?access_token=' + accessToken;
-    $.get(directionsUrl, function(data) {
-        var route = data.routes[0].geometry.coordinates;
-        route = route.map(function(point) {
-            return [point[1], point[0]];
-        });
-
-        var multiP  = new ol.geom.MultiPoint();
-        var transed = [];
-        for (var i=0;i<route.length;i++) {
-
-            var pos = [route[i][1],route[i][0]];
-
-            pos = ol.proj.fromLonLat(pos);
-            transed.push(pos);
-            console.log('xy: ' + pos);
-            var geomPoint = new ol.geom.Point(pos);
-            multiP.appendPoint(geomPoint);
-        }
-
-        console.log("result was " + route);
-
-        var
-            vectorSource = new ol.source.Vector(),
-            vectorLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
-
-        var routePath = new ol.format.Polyline({
-        }).readGeometry(multiP);
-        routePath.flatCoordinates = multiP.flatCoordinates;
-        var feature = new ol.Feature({
-            type: 'route',
-            geometry: routePath
-        });
-
-        var routeStyle = new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                width: 4, color: [255, 0, 0, 0.9]
-            })
-        })
-
-        feature.setStyle(routeStyle);
-        vectorSource.addFeature(feature);
-        map.addLayer(vectorLayer);
-        view.setCenter(pos);
-    });
-}
 

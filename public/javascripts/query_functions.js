@@ -101,8 +101,51 @@ function logoutUser() {
     });
 }
 
+// Autocomplete function for getClosestDesiredMushroomOfSpecificType
+function initSearch(availableTags) {
+
+    $("#tags").autocomplete({
+        source: availableTags
+    });
+}
+
+// For the autocomplete textbox in Find closest desired mushroom of specific type
+function getAllDistinctMushroomFindingsSpecies() {
+
+    var request = $.ajax({
+        url: "api/getAllDistinctSpecies",
+        type: "POST",
+        data: {},
+        cache: false
+    });
+
+    request.done(function(mushroomObject) {
+
+        if (mushroomObject == "noMushrooms") {
+            console.log("No mushroom findings were found.");
+            return;
+        }
+
+        var availableMushrooms = [];
+        for (var i = 0; i < mushroomObject.length; i++) {
+
+            var specie = mushroomObject[i].name;
+            availableMushrooms.push(specie);
+        }
+        initSearch(availableMushrooms);
+    });
+
+    request.fail(function(jqXHR, textStatus) {
+        console.log(textStatus);
+    });
+
+}
+
 // Get the closest mushroom of a specific type from a given coordinate
-function getClosestDesiredMushroom(longitude, latitude, mushroom_type) {
+function getClosestDesiredMushroom(shouldNavigate, mushroom_type) {
+
+    var latitude = userCoords[1];
+    var longitude = userCoords[0];
 
     // Unselect all features when using the function, remove the popup of it and clear highlighted mushrooms from this function
     selectInteractionHighlight.getFeatures().clear();
@@ -111,7 +154,8 @@ function getClosestDesiredMushroom(longitude, latitude, mushroom_type) {
 
     // To be able to call the test function getClosestDesiredMushroom
     if (!mushroom_type) {
-        mushroom_type = document.getElementById("mushroomType").value;
+        // The mushroom species are in lower case in the DB
+        mushroom_type = document.getElementById("tags").value.toLowerCase();
     }
 
     if (mushroom_type == 'noMushroomTypeSelected') {
@@ -132,18 +176,18 @@ function getClosestDesiredMushroom(longitude, latitude, mushroom_type) {
             }
 
             // Accessing properties of the return object
-            mushroom_the_geom = mushroomObject[0].the_geom;
-            specie = mushroomObject[0].name;
-            quantity = mushroomObject[0].quantity;
-            finding_place = mushroomObject[0].finding_place;
-            precision = mushroomObject[0].precision;
-            date = mushroomObject[0].date;
-            comment = mushroomObject[0].comment;
-            biotope = mushroomObject[0].biotope;
+            var mushroom_the_geom = mushroomObject[0].the_geom;
+            var specie = mushroomObject[0].name;
+            var quantity = mushroomObject[0].quantity;
+            var finding_place = mushroomObject[0].finding_place;
+            var precision = mushroomObject[0].precision;
+            var date = mushroomObject[0].date;
+            var comment = mushroomObject[0].comment;
+            var biotope = mushroomObject[0].biotope;
 
-            lon = mushroom_the_geom.coordinates[0];
-            lat = mushroom_the_geom.coordinates[1];
-            coordinates = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
+            var lon = mushroom_the_geom.coordinates[0];
+            var lat = mushroom_the_geom.coordinates[1];
+            var coordinates = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 
             // Creating a ol.Feature of the object
             var feature = new ol.Feature({
@@ -162,11 +206,17 @@ function getClosestDesiredMushroom(longitude, latitude, mushroom_type) {
             highlighted_mushrooms.addFeature(feature);
 
             // Set the view to the highlighted mushroom layer
-            extent = highlighted_mushroom_layer.getSource().getExtent();
+            var extent = highlighted_mushroom_layer.getSource().getExtent();
             map.getView().fit(extent, map.getSize());
             map.getView().setZoom(14);
 
             sidebar.close();
+			
+			// Navigation = true
+            if (shouldNavigate){
+                var travelMode = "driving";
+                navigateToMush(userCoords[0], userCoords[1], mushroom_the_geom.coordinates[0], mushroom_the_geom.coordinates[1], travelMode, true);
+            }
 
         });
 
@@ -197,28 +247,28 @@ function getAllUserFindings() {
             insertPoint = new ol.Feature({
                 name: 'getPoint',
                 geometry: new ol.geom.Point(coords),
-                id: 		mushroomObject[i].id,
-                specie: 	mushroomObject[i].name,
-                quantity: 	mushroomObject[i].quantity,
-                unit: 		mushroomObject[i].unit,
-                finding_place: 	mushroomObject[i].finding_place,
-                precision: 	mushroomObject[i].precision,
-                county: 	mushroomObject[i].county,
-                municipality: 	mushroomObject[i].municipality,
-                province: 	mushroomObject[i].province,
-                date: 		mushroomObject[i].date,
-                comment: 	mushroomObject[i].comment,
-                biotope: 	mushroomObject[i].biotope,
-                biotope_desc: 	mushroomObject[i].biotope_description,
-                substrate: 	mushroomObject[i].substrate
+                id: mushroomObject[i].id,
+                specie: mushroomObject[i].name,
+                quantity: mushroomObject[i].quantity,
+                unit: mushroomObject[i].unit,
+                finding_place: mushroomObject[i].finding_place,
+                precision: mushroomObject[i].precision,
+                county: mushroomObject[i].county,
+                municipality: mushroomObject[i].municipality,
+                province: mushroomObject[i].province,
+                date: mushroomObject[i].date,
+                comment: mushroomObject[i].comment,
+                biotope: mushroomObject[i].biotope,
+                biotope_desc: mushroomObject[i].biotope_description,
+                substrate: mushroomObject[i].substrate
             });
 
-	    highlighted_mushroom_layer.getSource().addFeature(insertPoint);	    
+            highlighted_mushroom_layer.getSource().addFeature(insertPoint);
         }
 
-	// Set the view to the extent of the user inserted points
-	extent = highlighted_mushroom_layer.getSource().getExtent();
-	map.getView().fit(extent, map.getSize());
+        // Set the view to the extent of the user inserted points
+        extent = highlighted_mushroom_layer.getSource().getExtent();
+        map.getView().fit(extent, map.getSize());
 
         console.log("Get all findings was successful!");
     });
@@ -232,34 +282,34 @@ function getAllUserFindings() {
 function insertQuery() {
 
     // Process the insert query to the database
-    mushroom_name = 	document.getElementById('specie').value;
-    quantity = 		document.getElementById('quantity').value;
-    unit = 		document.getElementById('unit').value;
-    finding_place = 	document.getElementById('finding_place').value;
-    precision = 	document.getElementById('precision').value;
-    county = 		document.getElementById('county').value;
-    municipality = 	document.getElementById('municipality').value;
-    province = 		document.getElementById('province').value;
-    date = 		document.getElementById('date').value;
-    comment = 		document.getElementById('comment').value;
-    biotope = 		document.getElementById('biotope').value;
-    biotope_desc = 	document.getElementById('biotope_desc').value;
-    substrate = 	document.getElementById('substrate').value;
+    mushroom_name = document.getElementById('specie').value;
+    quantity = document.getElementById('quantity').value;
+    unit = document.getElementById('unit').value;
+    finding_place = document.getElementById('finding_place').value;
+    precision = document.getElementById('precision').value;
+    county = document.getElementById('county').value;
+    municipality = document.getElementById('municipality').value;
+    province = document.getElementById('province').value;
+    date = document.getElementById('date').value;
+    comment = document.getElementById('comment').value;
+    biotope = document.getElementById('biotope').value;
+    biotope_desc = document.getElementById('biotope_desc').value;
+    substrate = document.getElementById('substrate').value;
 
     // This adds default value if the user inserted finding is missing a value
     // Mushroom name is mandatory
-    if (quantity == "") {quantity = -1;}
-    if (unit == "") {unit = "'' ";}
-    if (finding_place == "") {finding_place = "'' ";}
-    if (precision == "") {precision = 0;}
-    if (county == "") {county = "'' ";}
-    if (municipality == "") {municipality = "'' ";}
-    if (province == "") {province = "'' ";}
-    if (date == "") {date = "'' ";}
-    if (comment == "") {comment = "'' ";}
-    if (biotope == "") {biotope = "'' ";}
-    if (biotope_desc == "") {biotope_desc = "'' ";}
-    if (substrate == "") {substrate = "'' ";}
+    if (quantity == "") { quantity = -1; }
+    if (unit == "") { unit = "'' "; }
+    if (finding_place == "") { finding_place = "'' "; }
+    if (precision == "") { precision = 0; }
+    if (county == "") { county = "'' "; }
+    if (municipality == "") { municipality = "'' "; }
+    if (province == "") { province = "'' "; }
+    if (date == "") { date = "'' "; }
+    if (comment == "") { comment = "'' "; }
+    if (biotope == "") { biotope = "'' "; }
+    if (biotope_desc == "") { biotope_desc = "'' "; }
+    if (substrate == "") { substrate = "'' "; }
 
     // Get feature coordinates
     transform = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
@@ -271,21 +321,21 @@ function insertQuery() {
         url: "/api/insertFinding",
         type: "POST",
         data: {
-            latitude: 		latitude,
-            longitude: 		longitude,
-            mushroom_name: 	mushroom_name,
-            quantity: 		quantity,
-            unit: 		unit,
-            finding_place: 	finding_place,
-            precision: 		precision,
-            county: 		county,
-            municipality: 	municipality,
-            province: 		province,
-            date: 		date,
-            comment: 		comment,
-            biotope: 		biotope,
-            biotope_desc: 	biotope_desc,
-            substrate: 		substrate
+            latitude: latitude,
+            longitude: longitude,
+            mushroom_name: mushroom_name,
+            quantity: quantity,
+            unit: unit,
+            finding_place: finding_place,
+            precision: precision,
+            county: county,
+            municipality: municipality,
+            province: province,
+            date: date,
+            comment: comment,
+            biotope: biotope,
+            biotope_desc: biotope_desc,
+            substrate: substrate
         },
         cache: false
     });
@@ -297,24 +347,24 @@ function insertQuery() {
         insertPoint = new ol.Feature({
             name: 'getPoint',
             geometry: new ol.geom.Point(insertCoords),
-            specie: 		mushroom_name,
-            quantity: 		quantity,
-            unit: 		unit,
-            finding_place: 	finding_place,
-            precision: 		precision,
-            county: 		county,
-            municipality: 	municipality,
-            province: 		province,
-            date: 		date,
-            comment: 		comment,
-            biotope: 		biotope,
-            biotope_desc: 	biotope_desc,
-            substrate: 		substrate
+            specie: mushroom_name,
+            quantity: quantity,
+            unit: unit,
+            finding_place: finding_place,
+            precision: precision,
+            county: county,
+            municipality: municipality,
+            province: province,
+            date: date,
+            comment: comment,
+            biotope: biotope,
+            biotope_desc: biotope_desc,
+            substrate: substrate
         });
 
         // Insert point and close the sidebar
-	highlighted_mushroom_layer.getSource().addFeature(insertPoint);
-	sidebar.close('insertinfotab');
+        highlighted_mushroom_layer.getSource().addFeature(insertPoint);
+        sidebar.close('insertinfotab');
     });
 
     request.fail(function(jqXHR, textStatus, state) {
@@ -326,19 +376,19 @@ function insertQuery() {
 function updateQuery() {
 
     // New values
-    mushroom_name = 	document.getElementById('updateSpecie').value;
-    quantity = 		document.getElementById('updateQuantity').value;
-    unit = 		document.getElementById('updateUnit').value;
-    finding_place = 	document.getElementById('updateFindingPlace').value;
-    precision = 	document.getElementById('updatePrecision').value;
-    county = 		document.getElementById('updateCounty').value;
-    municipality = 	document.getElementById('updateMunicipality').value;
-    province = 		document.getElementById('updateProvince').value;
-    date = 		document.getElementById('updateDate').value;
-    comment = 		document.getElementById('updateComment').value;
-    biotope = 		document.getElementById('updateBiotope').value;
-    biotope_desc = 	document.getElementById('updateBiotope_desc').value;
-    substrate = 	document.getElementById('updateSubstrate').value;
+    mushroom_name = document.getElementById('updateSpecie').value;
+    quantity = document.getElementById('updateQuantity').value;
+    unit = document.getElementById('updateUnit').value;
+    finding_place = document.getElementById('updateFindingPlace').value;
+    precision = document.getElementById('updatePrecision').value;
+    county = document.getElementById('updateCounty').value;
+    municipality = document.getElementById('updateMunicipality').value;
+    province = document.getElementById('updateProvince').value;
+    date = document.getElementById('updateDate').value;
+    comment = document.getElementById('updateComment').value;
+    biotope = document.getElementById('updateBiotope').value;
+    biotope_desc = document.getElementById('updateBiotope_desc').value;
+    substrate = document.getElementById('updateSubstrate').value;
 
     // Existing values
     existingFeature = highlightFeature.values_;
@@ -416,19 +466,19 @@ function updateQuery() {
         type: "POST",
         data: {
             id: id,
-            updateMushroomName: 	updateMushroomName,
-            updateQuantity: 		updateQuantity,
-            updateUnit: 		updateUnit,
-            updateFindingPlace: 	updateFindingPlace,
-            updatePrecision: 		updatePrecision,
-            updateCounty: 		updateCounty,
-            updateMunicipality: 	updateMunicipality,
-            updateProvince: 		updateProvince,
-            updateDate: 		updateDate,
-            updateComment: 		updateComment,
-            updateBiotope: 		updateBiotope,
-            updateBiotope_desc: 	updateBiotope_desc,
-            updateSubstrate: 		updateSubstrate
+            updateMushroomName: updateMushroomName,
+            updateQuantity: updateQuantity,
+            updateUnit: updateUnit,
+            updateFindingPlace: updateFindingPlace,
+            updatePrecision: updatePrecision,
+            updateCounty: updateCounty,
+            updateMunicipality: updateMunicipality,
+            updateProvince: updateProvince,
+            updateDate: updateDate,
+            updateComment: updateComment,
+            updateBiotope: updateBiotope,
+            updateBiotope_desc: updateBiotope_desc,
+            updateSubstrate: updateSubstrate
         },
         cache: false
     });
@@ -439,24 +489,24 @@ function updateQuery() {
         updatePoint = new ol.Feature({
             name: 'getPoint',
             geometry: new ol.geom.Point(existingFeature.geometry.flatCoordinates),
-            specie: 		updateMushroomName,
-            quantity: 		updateQuantity,
-            unit: 		updateUnit,
-            finding_place: 	updateFindingPlace,
-            precision: 		updatePrecision,
-            county: 		updateCounty,
-            municipality: 	updateMunicipality,
-            province: 		updateProvince,
-            date: 		updateDate,
-            comment: 		updateComment,
-            biotope: 		updateBiotope,
-            biotope_desc: 	updateBiotope_desc,
-            substrate: 		updateSubstrate
+            specie: updateMushroomName,
+            quantity: updateQuantity,
+            unit: updateUnit,
+            finding_place: updateFindingPlace,
+            precision: updatePrecision,
+            county: updateCounty,
+            municipality: updateMunicipality,
+            province: updateProvince,
+            date: updateDate,
+            comment: updateComment,
+            biotope: updateBiotope,
+            biotope_desc: updateBiotope_desc,
+            substrate: updateSubstrate
         });
 
         // Remove the old feature and insert the updated one
-	highlightFeature.setGeometry(null);
-	highlighted_mushroom_layer.getSource().addFeature(updatePoint);
+        highlightFeature.setGeometry(null);
+        highlighted_mushroom_layer.getSource().addFeature(updatePoint);
 
         sidebar.close('updateinfotab');
     });
@@ -481,7 +531,7 @@ function deleteQuery() {
 
     request.done(function(msg) {
         console.log(msg);
-	highlightFeature.setGeometry(null);
+        highlightFeature.setGeometry(null);
     });
 
     request.fail(function(jqXHR, textStatus, state) {
@@ -494,21 +544,21 @@ function getUniqueNames() {
 
     var request = $.ajax({
         url: "/api/getUniqueName",
-	type: "GET",
-	data: {},
-	cache: false
+        type: "GET",
+        data: {},
+        cache: false
     });
 
     request.done(function(names) {
-	console.log(names);
-	uniqueNames = [];
-	for (var i = 0; i < names.length; i++) {
-	    uniqueNames.push(names[i]);
-	}
-	console.log(uniqueNames);
+        console.log(names);
+        uniqueNames = [];
+        for (var i = 0; i < names.length; i++) {
+            uniqueNames.push(names[i]);
+        }
+        console.log(uniqueNames);
     });
 
     request.fail(function(jqXHR, textStatus, state) {
-	console.log(textStatus);
+        console.log(textStatus);
     });
 }

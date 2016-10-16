@@ -12,7 +12,7 @@ function crud() {
     vectorSourceNatureAreas = new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         url: function(extent, resolution, projection) {
-            return "/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:nature_areas&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
+            return "http://stiin.se//geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:nature_areas&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
                 ",'EPSG:3857'" + "))";
         },
         strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({}))

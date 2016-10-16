@@ -11,6 +11,23 @@ var highlightedMushroomFeatureStyle;
 var popupContent;
 var isSpaceTimePage;
 
+(function() {
+    var cors_api_host = 'cors-anywhere.herokuapp.com';
+    var cors_api_url = 'https://' + cors_api_host + '/';
+    var slice = [].slice;
+    var origin = window.location.protocol + '//' + window.location.host;
+    var open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function() {
+        var args = slice.call(arguments);
+        var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+        if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
+            targetOrigin[1] !== cors_api_host) {
+            args[1] = cors_api_url + args[1];
+        }
+        return open.apply(this, args);
+    };
+})();
+
 // Now includes initializing of map, layers and their interaction (WFS), popup
 function initMap() {
     isSpaceTimePage = false;
@@ -49,7 +66,7 @@ function initMap() {
     vectorSource = new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         url: function(extent, resolution, projection) {
-            return "/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:mushroom_findings&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
+            return "http://stiin.se/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:mushroom_findings&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
                 ",'EPSG:3857'" + "))";
         },
         strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({

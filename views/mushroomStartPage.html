@@ -19,7 +19,10 @@
     <link rel="stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css'>
 
     <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script> -->
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Bootstrap + Awesome Fonts -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -77,17 +80,19 @@
                     <p>Mushrooming</p>
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-			
-		<br><p><b>Welcome to the mushrooming application!</b></p>
-		<br><p>The main functionalities in this application are:</p>
-		<ul>
-			<li>Viewing different mushroom findings across Sweden</li>
-			<li>Finding the closest mushroom picking places of desired mushrooms and routes to these</li>
-			<li>Making light spacetime analysis of these findings</li>
-			<li>Possibility to insert, update and delete own mushroom findings</li>
-		</ul>
-		<br>
-		<hr>
+
+                <br>
+                <p><b>Welcome to the mushrooming application!</b></p>
+                <br>
+                <p>The main functionalities in this application are:</p>
+                <ul>
+                    <li>Viewing different mushroom findings across Sweden</li>
+                    <li>Finding the closest mushroom picking places of desired mushrooms and routes to these</li>
+                    <li>Making light spacetime analysis of these findings</li>
+                    <li>Possibility to insert, update and delete own mushroom findings</li>
+                </ul>
+                <br>
+                <hr>
                 <!-- Buttons for different EventHandlers -->
                 <br>
                 <p><b>Routing functionality (only works in the nature areas):</b></p>
@@ -100,15 +105,13 @@
                 <br>
                 <button id="clear">clear route</button>
                 <br>
-
-                <div class="onoffswitch">
+				<div class="onoffswitch">
                     <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
                     <label class="onoffswitch-label" for="myonoffswitch">
                         <span class="onoffswitch-inner"></span>
                         <span class="onoffswitch-switch"></span>
                     </label>
                 </div>
-
             </div>
 
             <!-- sidebar content find mushrooms -->
@@ -117,37 +120,19 @@
                     Find mushrooms
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-
                 <br>
 
                 <p><b>Working function</b></p>
                 <br>
-
-                <button onclick="sidebar.open('function1');">
-                    <div>
-                        <br>
-                        <p>Find the closest mushroom of specific type</p>
-                        <br>
-                    </div>
-                </button>
-
+                <button type="button" class="btn btn-info" onclick="sidebar.open('function1')">CLOSEST MUSHROOM</button>
+                <!--getAllDistinctMushroomFindingsSpecies() -->
                 <br>
                 <br>
 
                 <p><b>Function still to be implemented</b></p>
                 <br>
-
-                <button onclick="sidebar.open('function2');">
-                    <div>
-                        <br>
-                        <p>Find the closest mushroom of specific type and the shortest path there</p>
-                        <br>
-                    </div>
-                </button>
-
-                <br>
-                <br>
-
+                <button type="button" class="btn btn-info" onclick="sidebar.open('function2')">SHORTEST PATH TO
+                    <BR>CLOSEST MUSHROOM</button>
             </div>
 
             <!-- sidebar content you findings -->
@@ -158,7 +143,8 @@
                 </h1>
 
                 <br>
-                <p>Click the following link for adding, updating and deleting you own mushroom findings: </p><br>
+                <p>Click the following link for adding, updating and deleting you own mushroom findings: </p>
+                <br>
                 <a href="/handleMushrooms">Handle your mushroom findings</a>
 
             </div>
@@ -173,7 +159,7 @@
                 <br>
                 <p>Make some awesome space-time analysis with polygons...</p>
                 <br>
-                <a href="/spaceTimeAnalysis">Make an awesome space-time analysis of the mushroom finding places!</a>
+                <a href="/spaceTimeAnalysis" class="btn btn-default" role="button">SPACE-TIME ANALYSIS</a>
 
             </div>
 
@@ -185,9 +171,9 @@
                 </h1>
 
                 <br>
-                <p><b>Do you want to sign out?</b></p>
+                <p>Do you want to log out?</p>
                 <br>
-                <button onclick="logoutUser()">Sign out</button>
+                <button type="button" class="btn btn-warning" onclick="logoutUser()">SIGN OUT</button>
                 <br>
 
             </div>
@@ -211,25 +197,24 @@
 
             <!-- sidebar content for function 1 -->
             <div class="sidebar-pane" id="function1">
-                <h1 class="sidebar-header"></h1>
+                <h1 class="sidebar-header">
+                    Closest mushroom
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
 
                 <br>
-                <p>Find mushrooms of a specific type</p>
-                <select id="mushroomType">
-                    <option value="noMushroomTypeSelected">Pick a mushroom species</option>
-                    <option value="kantarell">Kantarell</option>
-                    <option value="punktplätt">Punktplätt</option>
-                    <option value="alticka">Alticka</option>
-                    <option value="vårplätt">Vårplätt</option>
-                    <option value="tårticka">Tårticka</option>
-                </select>
+                <p>Find the closest mushroom of a specific type.</p>
+
+                <div class="ui-widget">
+                    <label for="tags">Mushroom species: </label>
+                    <input type="text" id="tags">
+                </div>
 
                 <br>
                 <br>
 
-                <button onclick="getClosestDesiredMushroom(18.068390, 59.320579)">Search</button>
-                <button onclick="sidebar.open('find_mushrooms');">Abort</button>
-
+                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(false,document.getElementById('tags').value)">SEARCH</button>
+                <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
             </div>
 
             <!-- sidebar content for function 2 -->
@@ -237,22 +222,18 @@
                 <h1 class="sidebar-header"></h1>
 
                 <br>
-                <p>Find the closest mushroom of specific type and the shorthest path there</p>
-                <select id="mushroomType" onchange="">
-                    <option value="">Pick a mushroom species</option>
-                    <option value="kantarell">Kantarell</option>
-                    <option value="punktplätt">Punktplätt</option>
-                    <option value="alticka">Alticka</option>
-                    <option value="vårplätt">Vårplätt</option>
-                    <option value="tårticka">Tårticka</option>
-                </select>
+                <p>Find the closest mushroom of a specific type and the shortest path there</p>
 
+                <div class="ui-widget">
+                    <label for="tags2">Mushroom species: </label>
+                    <input type="text" id="tags2">
+                </div>
                 <br>
                 <br>
 
-                <button onclick="">Search</button>
-                <button onclick="sidebar.open('find_mushrooms');">Abort</button>
-
+                <!-- Hardcoded location FIX ME -->
+                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(true,document.getElementById('tags2').value)">SEARCH</button>
+                <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
             </div>
 
         </div>

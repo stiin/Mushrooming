@@ -107,6 +107,10 @@ function initSearch(availableTags) {
     $("#tags").autocomplete({
         source: availableTags
     });
+
+    $("#tags2").autocomplete({
+        source: availableTags
+    });
 }
 
 // For the autocomplete textbox in Find closest desired mushroom of specific type
@@ -142,11 +146,18 @@ function getAllDistinctMushroomFindingsSpecies() {
 }
 
 // Get the closest mushroom of a specific type from a given coordinate
-function getClosestDesiredMushroom(shouldNavigate, mushroom_type) {
+function getClosestDesiredMushroom(automatic, shouldNavigate, mushroom_type) {
 
-    var latitude = userCoords[1];
-    var longitude = userCoords[0];
+    var latitude = null;
+    var longitude = null;
 
+    if(automatic) {
+        latitude = userCoords[1];
+        longitude = userCoords[0];
+    } else {
+        latitude = manuallyChosenStartPoint[1];
+        longitude = manuallyChosenStartPoint[0];
+    }
     // Unselect all features when using the function, remove the popup of it and clear highlighted mushrooms from this function
     selectInteractionHighlight.getFeatures().clear();
     map.removeOverlay(popup);
@@ -214,10 +225,9 @@ function getClosestDesiredMushroom(shouldNavigate, mushroom_type) {
 			
 	    // Navigation = true
             if (shouldNavigate){
-                var travelMode = "driving";
-                navigateToMush(userCoords[0], userCoords[1], mushroom_the_geom.coordinates[0], mushroom_the_geom.coordinates[1], travelMode, true);
+                var travelMode = $('input[name=travel_mode]:checked').val();
+                navigateToMush(longitude, latitude, mushroom_the_geom.coordinates[0], mushroom_the_geom.coordinates[1], travelMode, true);
             }
-
         });
 
         request.fail(function(jqXHR, textStatus, state) {

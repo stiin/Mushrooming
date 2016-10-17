@@ -41,7 +41,6 @@
 </head>
 
 <!-- Every time when a page is opened these functions are initialized -->
-
 <body onload="initMap(); crud()">
 
     <div id="sidebar" class="sidebar collapsed">
@@ -61,47 +60,52 @@
             <!-- sidebar content home -->
             <div class="sidebar-pane" id="home">
                 <h1 class="sidebar-header">
-                    <p>Your mushroom findings!</p>
+                    <p>Mushroom findings</p>
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br>
 		
-		<p>In this part of the application you can handle your own mushroom findings. The possible functionalities are adding your own findings, modifying and deleting them. Start by adding you first finding to the map by opening the second tab!</p><br>
+		<p>In this part of the application you can handle your own mushroom findings. The possible functionalities are: </p>
+		<ul>
+		    <li>Add your own mushroom findings</li>
+		    <li>Update your existing findings</li>
+		    <li>Delete your findings</li>
+		</ul><br>		
+	
+		<p>Start by adding you first finding to the map by opening the second tab!</p><br>
 
 		<p>If you want to go back to the main application click the following link:</p><br>
 
-                <a href="/map">Go back to the main page!</a>
+                <a href="/map" class="btn btn-default" role="button">Go back to the main page!</a>
 
             </div>
 
             <!-- sidebar content you findings -->
             <div class="sidebar-pane" id="your_findings">
                 <h1 class="sidebar-header">
-                    Add new finding!
+                    Add new findings
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br><p><b>Instructions:</b></p>
 
 	 	<ol>
-                	<li>Press "Insert new finding!" button and click the map</li>
-                	<li>Then fill the form with desired attribute information and press insert</li>
-                	<li>After that a feature will be shown in the map</li>
-	        	<li>If you want to view the content of the finding you can click it and updated or deleted as you like</li>
-                	<li>Note that the update and delete functionality are not working yet</li>
-		</ol>
+                    <li>Press "Insert new finding" button</li>
+		    <li>Zoom close enough to the map where nature areas highlight and click the nature area</li>
+                    <li>Fill the form with desired attribute information and press insert. Notice the mandatory fields marked with *</li>
+                    <li>After that a feature will be shown in the map</li>
+	            <li>If you want to view the content of the recent or existing findings you can click highlighted feature and then update or delete findings as you like. Notice that findings added in the same session cannot be updated or deleted without refreshing the page</li>
+		</ol><br>
 
-                <br>
-
-                <button id="insert">Insert new finding!</button>
+                <button id="insert" class="btn btn-default" role="button">Insert new finding</button>
 
             </div>
 
             <!-- sidebar content for the mushroom info -->
             <div class="sidebar-pane" id="info">
                 <h1 class="sidebar-header">
-                    Mushroom info!
+                    Mushroom info
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
@@ -118,7 +122,7 @@
             <!-- sidebar content inserting mushroom info -->
             <div class="sidebar-pane" id="insertinfotab">
                 <h1 class="sidebar-header">
-                    Insert finding!
+                    Insert finding
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
@@ -130,23 +134,23 @@
             <!-- sidebar content for existing mushroom findings -->
             <div class="sidebar-pane" id="existingfindinginfotab">
                 <h1 class="sidebar-header">
-                    Modify finding!
+                    Modify finding
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br>
                 <p id="existinginfo"></p>
-                <br>
+                <hr>
 
-                <button id="update">Update!</button>
-                <button id="delete">Delete!</button>
+                <button id="update" class="btn btn-default" role="button">Update</button>
+                <button id="delete" class="btn btn-default" role="button">Delete</button>
 
             </div>
 
             <!-- sidebar content for updating mushroom info -->
             <div class="sidebar-pane" id="updateinfotab">
                 <h1 class="sidebar-header">
-                    Update finding!
+                    Update finding
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 

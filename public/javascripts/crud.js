@@ -4,15 +4,14 @@ function crud() {
 
     sidebar.open('home');
 
-    // This will load every user finding to the map and every unique name for form checking 
+    // This will load every user finding to the map
     getAllUserFindings();
-    getUniqueNames();
 
     // Nature areas WFS source for restricting the finding insertion
     vectorSourceNatureAreas = new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         url: function(extent, resolution, projection) {
-            return "http://stiin.se//geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:nature_areas&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
+            return "/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:nature_areas&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
                 ",'EPSG:3857'" + "))";
         },
         strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({}))
@@ -24,6 +23,9 @@ function crud() {
 	    stroke: new ol.style.Stroke({
 	        color: 'green',
 		width: 1
+	    }),
+	    fill: new ol.style.Fill({
+		color: 'rgba(64, 139, 64, 0.5)'
 	    })
 	})
     });
@@ -34,10 +36,10 @@ function crud() {
 
     // Check the visibility of the nature area layer -> restrict the load of features
     map.getView().on('change:resolution', function (event) {
-        if (map.getView().getZoom() > 10) {
+        if (map.getView().getZoom() > 11) {
             natureAreas.setVisible(true);
         }
-        if (map.getView().getZoom() < 10) {
+        if (map.getView().getZoom() < 11) {
             natureAreas.setVisible(false);
         }
     });    
@@ -70,7 +72,7 @@ function crud() {
 
                 // Form is calling a insertQuery() function in query_functions.js
 	        insertInfoContent.innerHTML = 
-		    "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><br><hr>" +
+		    "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><hr>" +
             	    "<form role='form' action='javascript:insertQuery()'>" +
                         "<label>* Specie: </label> <input type='text' id='specie'><br />" +
                         "<label>Quantity: </label> <input type='text' id='quantity'><br />" +
@@ -85,7 +87,7 @@ function crud() {
                         "<label>Biotope: </label> <input type='text' id='biotope'><br />" +
                         "<label>Biotope description: </label> <input type='text' id='biotope_desc'><br />" +
                         "<label>Substrate: </label> <input type='text' id='substrate'><br />" +
-                        "<br><input type='submit' value='Insert' onclick='return checkInsert();'>" +
+                        "<br><input type='submit' class='btn btn-default' value='Insert' onclick='return checkInsert();'>" +
                     "</form></div>";	
 
                 insertCoords = event.coordinate;
@@ -137,7 +139,8 @@ function crud() {
         sidebar.open('updateinfotab');
     });
 
-
+    // Finally load all unique names for the form checks
+    getUniqueNames();
 }
 
 // Checks the user inserted mushroom finding info
@@ -224,8 +227,8 @@ function checkInsert() {
 }
 
 // Checks the user updated mushroom findings info
-function checkUpdate() {
-    
+function checkUpdate() {   
+
     var updateValues = ['updateSpecie', 'updateQuantity', 'updateUnit', 'updateFindingPlace', 'updatePrecision', 'updateCounty', 'updateMunicipality', 'updateProvince', 'updateDate', 'updateComment', 'updateBiotope', 'updateBiotope_desc', 'updateSubstrate'];
 
     // Check that specie field cannot start with captialized letter

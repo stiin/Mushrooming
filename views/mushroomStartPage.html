@@ -53,7 +53,7 @@
 
 <!-- Every time when a page is opened these functions are initialized -->
 
-<body onload="initMap(); routing(); autoLocationClicked(document.getElementById('myonoffswitch'));">
+<body onload="initMap(); autoLocationClicked(document.getElementById('myonoffswitch'));"> <!-- routing(); -->
 
     <div id="sidebar" class="sidebar collapsed">
 
@@ -91,9 +91,9 @@
                     <li>Making light spacetime analysis of these findings</li>
                     <li>Possibility to insert, update and delete own mushroom findings</li>
                 </ul>
-                <br>
                 <hr>
-                <!-- Buttons for different EventHandlers -->
+
+                <!--
                 <br>
                 <p><b>Routing functionality (only works in the nature areas):</b></p>
                 <br>
@@ -104,8 +104,11 @@
                 <button id="navigate">calculate route</button>
                 <br>
                 <button id="clear">clear route</button>
+		-->
+
                 <br>
-				<div class="onoffswitch">
+		<p><b>Turn on/off your geolocation</b></p><br>		
+		<div class="onoffswitch">
                     <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
                     <label class="onoffswitch-label" for="myonoffswitch">
                         <span class="onoffswitch-inner"></span>
@@ -117,61 +120,62 @@
             <!-- sidebar content find mushrooms -->
             <div class="sidebar-pane" id="find_mushrooms">
                 <h1 class="sidebar-header">
-                    Find mushrooms
+                    Find mushrooms with tools
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-                <br>
 
-                <p><b>Working function</b></p>
-                <br>
-                <button type="button" class="btn btn-info" onclick="sidebar.open('function1')">CLOSEST MUSHROOM</button>
+                <br><p>Find mushroom tab includes functionalities that can be used as tools to find the closest desired mushroom and shortest routes to these.</p><br>
+
+
+                <p><b>Working function</b></p><br>
+                <button class="btn btn-default" onclick="sidebar.open('function1')">Closest mushroom</button>
+
                 <!--getAllDistinctMushroomFindingsSpecies() -->
                 <br>
                 <br>
 
                 <p><b>Function still to be implemented</b></p>
                 <br>
-                <button type="button" class="btn btn-info" onclick="sidebar.open('function2')">SHORTEST PATH TO
-                    <BR>CLOSEST MUSHROOM</button>
+                <button class="btn btn-default" onclick="sidebar.open('function2')">Shortest path to the closest mushroom</button>
             </div>
 
             <!-- sidebar content you findings -->
             <div class="sidebar-pane" id="your_findings">
                 <h1 class="sidebar-header">
-                    Your mushroom findings
+                    Mushroom findings
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br>
                 <p>Click the following link for adding, updating and deleting you own mushroom findings: </p>
                 <br>
-                <a href="/handleMushrooms">Handle your mushroom findings</a>
+                <a href="/handleMushrooms" class="btn btn-default" role="button">Handle your mushroom findings</a>
 
             </div>
 
             <!-- sidebar content you findings -->
             <div class="sidebar-pane" id="space_time_analysis">
                 <h1 class="sidebar-header">
-                    Space-Time Analysis
+                    Space-time analysis
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br>
                 <p>Make some awesome space-time analysis with polygons...</p>
                 <br>
-                <a href="/spaceTimeAnalysis" class="btn btn-default" role="button">SPACE-TIME ANALYSIS</a>
+                <a href="/spaceTimeAnalysis" class="btn btn-default" role="button">Space-Time Analysis</a>
 
             </div>
 
             <!-- sidebar content sign out -->
             <div class="sidebar-pane" id="sign_out">
                 <h1 class="sidebar-header">
-                    Sign Out
+                    Sign out
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
                 <br>
-                <p>Do you want to log out?</p>
+                <p><b>Do you want to log out?</b></p>
                 <br>
                 <button type="button" class="btn btn-warning" onclick="logoutUser()">SIGN OUT</button>
                 <br>
@@ -202,8 +206,7 @@
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
-                <br>
-                <p>Find the closest mushroom of a specific type.</p>
+                <br><p>This application functionality will find the closest desired mushroom specie based on your location. In order to use this functionality you have to assign the desired mushroom specie that you are looking for. When you start typing the mushroom name the textbox will guide you to find the correct one.</p><br>
 
                 <div class="ui-widget">
                     <label for="tags">Mushroom species: </label>
@@ -219,10 +222,12 @@
 
             <!-- sidebar content for function 2 -->
             <div class="sidebar-pane" id="function2">
-                <h1 class="sidebar-header"></h1>
+                <h1 class="sidebar-header">
+		    Shortest path to the closest mushroom
+		    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+		</h1>
 
-                <br>
-                <p>Find the closest mushroom of a specific type and the shortest path there</p>
+                <br><p>This application functionality will find the closest desired mushroom specie based on your location and calculates the shorthest route there using walkable routes. In order to use this functionality you have to assign the desired mushroom specie that you are looking for. When you start typing the mushroom name the textbox will quide you to find the correct one.</p><br>
 
                 <div class="ui-widget">
                     <label for="tags2">Mushroom species: </label>

@@ -83,7 +83,7 @@ function routing() {
             params.viewparams = viewparams.join(';');
             result = new ol.layer.Image({
                 source: new ol.source.ImageWMS({
-                    url: 'http://stiin.se//geoserver/pgrouting/wms',
+                    url: '/geoserver/pgrouting/wms',
                     params: params
                 })
             });

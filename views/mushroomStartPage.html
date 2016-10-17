@@ -53,7 +53,7 @@
 
 <!-- Every time when a page is opened these functions are initialized -->
 
-<body onload="initMap(); routing(); autoLocationClicked(document.getElementById('myonoffswitch'));">
+<body onload="initMap(); autoLocationClicked(document.getElementById('myonoffswitch'));"> <!-- routing(); -->
 
     <div id="sidebar" class="sidebar collapsed">
 
@@ -93,7 +93,8 @@
                 </ul>
                 <br>
                 <hr>
-                <!-- Buttons for different EventHandlers -->
+
+                <!--
                 <br>
                 <p><b>Routing functionality (only works in the nature areas):</b></p>
                 <br>
@@ -104,8 +105,11 @@
                 <button id="navigate">calculate route</button>
                 <br>
                 <button id="clear">clear route</button>
+		-->
+
                 <br>
-				<div class="onoffswitch">
+		<p><b>Turn on/off your geolocation</b></p><br>		
+		<div class="onoffswitch">
                     <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
                     <label class="onoffswitch-label" for="myonoffswitch">
                         <span class="onoffswitch-inner"></span>
@@ -122,17 +126,16 @@
                 </h1>
                 <br>
 
-                <p><b>Working function</b></p>
-                <br>
-                <button type="button" class="btn btn-info" onclick="sidebar.open('function1')">CLOSEST MUSHROOM</button>
+                <p><b>Working function</b></p><br>
+                <button class="btn btn-info" onclick="sidebar.open('function1')">CLOSEST MUSHROOM</button>
+
                 <!--getAllDistinctMushroomFindingsSpecies() -->
                 <br>
                 <br>
 
                 <p><b>Function still to be implemented</b></p>
                 <br>
-                <button type="button" class="btn btn-info" onclick="sidebar.open('function2')">SHORTEST PATH TO
-                    <BR>CLOSEST MUSHROOM</button>
+                <button class="btn btn-info" onclick="sidebar.open('function2')">SHORTEST PATH TO CLOSEST MUSHROOM</button>
             </div>
 
             <!-- sidebar content you findings -->

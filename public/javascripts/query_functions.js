@@ -212,7 +212,7 @@ function getClosestDesiredMushroom(shouldNavigate, mushroom_type) {
 
             sidebar.close();
 			
-			// Navigation = true
+	    // Navigation = true
             if (shouldNavigate){
                 var travelMode = "driving";
                 navigateToMush(userCoords[0], userCoords[1], mushroom_the_geom.coordinates[0], mushroom_the_geom.coordinates[1], travelMode, true);
@@ -269,6 +269,8 @@ function getAllUserFindings() {
         // Set the view to the extent of the user inserted points
         extent = highlighted_mushroom_layer.getSource().getExtent();
         map.getView().fit(extent, map.getSize());
+	zoom = map.getView().getZoom();
+	map.getView().setZoom(zoom - 1);
 
         console.log("Get all findings was successful!");
     });
@@ -461,82 +463,90 @@ function updateQuery() {
         updateSubstrate = substrate;
     }
 
-    var request = $.ajax({
-        url: "/api/updateFinding",
-        type: "POST",
-        data: {
-            id: id,
-            updateMushroomName: updateMushroomName,
-            updateQuantity: updateQuantity,
-            updateUnit: updateUnit,
-            updateFindingPlace: updateFindingPlace,
-            updatePrecision: updatePrecision,
-            updateCounty: updateCounty,
-            updateMunicipality: updateMunicipality,
-            updateProvince: updateProvince,
-            updateDate: updateDate,
-            updateComment: updateComment,
-            updateBiotope: updateBiotope,
-            updateBiotope_desc: updateBiotope_desc,
-            updateSubstrate: updateSubstrate
-        },
-        cache: false
-    });
-
-    request.done(function(msg) {
-        console.log(msg);
-
-        updatePoint = new ol.Feature({
-            name: 'getPoint',
-            geometry: new ol.geom.Point(existingFeature.geometry.flatCoordinates),
-            specie: updateMushroomName,
-            quantity: updateQuantity,
-            unit: updateUnit,
-            finding_place: updateFindingPlace,
-            precision: updatePrecision,
-            county: updateCounty,
-            municipality: updateMunicipality,
-            province: updateProvince,
-            date: updateDate,
-            comment: updateComment,
-            biotope: updateBiotope,
-            biotope_desc: updateBiotope_desc,
-            substrate: updateSubstrate
+    if (typeof id === 'undefined') {
+        alert("You cannot update a finding added in this session!");
+    } else {
+        var request = $.ajax({
+            url: "/api/updateFinding",
+            type: "POST",
+            data: {
+                id: id,
+                updateMushroomName: updateMushroomName,
+                updateQuantity: updateQuantity,
+                updateUnit: updateUnit,
+                updateFindingPlace: updateFindingPlace,
+                updatePrecision: updatePrecision,
+                updateCounty: updateCounty,
+                updateMunicipality: updateMunicipality,
+                updateProvince: updateProvince,
+                updateDate: updateDate,
+                updateComment: updateComment,
+                updateBiotope: updateBiotope,
+                updateBiotope_desc: updateBiotope_desc,
+                updateSubstrate: updateSubstrate
+            },
+            cache: false
         });
 
-        // Remove the old feature and insert the updated one
-        highlightFeature.setGeometry(null);
-        highlighted_mushroom_layer.getSource().addFeature(updatePoint);
+        request.done(function(msg) {
+            console.log(msg);
 
-        sidebar.close('updateinfotab');
-    });
+            updatePoint = new ol.Feature({
+                name: 'getPoint',
+                geometry: new ol.geom.Point(existingFeature.geometry.flatCoordinates),
+                specie: updateMushroomName,
+                quantity: updateQuantity,
+                unit: updateUnit,
+                finding_place: updateFindingPlace,
+                precision: updatePrecision,
+                county: updateCounty,
+                municipality: updateMunicipality,
+                province: updateProvince,
+                date: updateDate,
+                comment: updateComment,
+                biotope: updateBiotope,
+                biotope_desc: updateBiotope_desc,
+                substrate: updateSubstrate
+            });
 
-    request.fail(function(jqXHR, textStatus, state) {
-        console.log(textStatus);
-    });
+            // Remove the old feature and insert the updated one
+            highlightFeature.setGeometry(null);
+            highlighted_mushroom_layer.getSource().addFeature(updatePoint);
+
+            sidebar.close('updateinfotab');
+        });
+
+        request.fail(function(jqXHR, textStatus, state) {
+            console.log(textStatus);
+        });
+    }
 
 }
 
 function deleteQuery() {
-
+ 
     existingFeature = highlightFeature.values_;
     id = existingFeature.id;
 
-    var request = $.ajax({
-        url: "/api/deleteFinding",
-        type: "POST",
-        data: { id: id },
-        cache: false
-    });
+    if (typeof id === 'undefined') {
+        alert("You cannot delete a finding added in this session!");
+    } else {
+        var request = $.ajax({
+            url: "/api/deleteFinding",
+            type: "POST",
+            data: { id: id },
+            cache: false
+        });
 
-    request.done(function(msg) {
-        console.log(msg);
-        highlightFeature.setGeometry(null);
-    });
+        request.done(function(msg) {
+            console.log(msg);
+            highlightFeature.setGeometry(null);
+        });
 
-    request.fail(function(jqXHR, textStatus, state) {
-        console.log(textStatus);
-    });
+        request.fail(function(jqXHR, textStatus, state) {
+            console.log(textStatus);
+        });
+    }
 
 }
 
@@ -555,7 +565,6 @@ function getUniqueNames() {
         for (var i = 0; i < names.length; i++) {
             uniqueNames.push(names[i]);
         }
-        console.log(uniqueNames);
     });
 
     request.fail(function(jqXHR, textStatus, state) {

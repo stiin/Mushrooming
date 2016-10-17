@@ -72,7 +72,7 @@ function crud() {
 
                 // Form is calling a insertQuery() function in query_functions.js
 	        insertInfoContent.innerHTML = 
-		    "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><br><hr>" +
+		    "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><hr>" +
             	    "<form role='form' action='javascript:insertQuery()'>" +
                         "<label>* Specie: </label> <input type='text' id='specie'><br />" +
                         "<label>Quantity: </label> <input type='text' id='quantity'><br />" +
@@ -87,7 +87,7 @@ function crud() {
                         "<label>Biotope: </label> <input type='text' id='biotope'><br />" +
                         "<label>Biotope description: </label> <input type='text' id='biotope_desc'><br />" +
                         "<label>Substrate: </label> <input type='text' id='substrate'><br />" +
-                        "<br><input type='submit' value='Insert' onclick='return checkInsert();'>" +
+                        "<br><input type='submit' class='btn btn-default' value='Insert' onclick='return checkInsert();'>" +
                     "</form></div>";	
 
                 insertCoords = event.coordinate;

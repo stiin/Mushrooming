@@ -236,41 +236,49 @@ function getAllUserFindings() {
     });
 
     request.done(function(mushroomObject) {
-        console.log(mushroomObject);
+ 
+	if (mushroomObject != "noUserFindings") {	
+            for (i = 0; i < mushroomObject.length; i++) {
+                lat = mushroomObject[i].lon;
+                lon = mushroomObject[i].lat;
+                coords = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
 
-        for (i = 0; i < mushroomObject.length; i++) {
-            lat = mushroomObject[i].lon;
-            lon = mushroomObject[i].lat;
-            coords = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
+                // Every user point is added to the layer
+                insertPoint = new ol.Feature({
+                    name: 'getPoint',
+                    geometry: new ol.geom.Point(coords),
+                    id: mushroomObject[i].id,
+                    specie: mushroomObject[i].name,
+                    quantity: mushroomObject[i].quantity,
+                    unit: mushroomObject[i].unit,
+                    finding_place: mushroomObject[i].finding_place,
+                    precision: mushroomObject[i].precision,
+                    county: mushroomObject[i].county,
+                    municipality: mushroomObject[i].municipality,
+                    province: mushroomObject[i].province,
+                    date: mushroomObject[i].date,
+                    comment: mushroomObject[i].comment,
+                    biotope: mushroomObject[i].biotope,
+                    biotope_desc: mushroomObject[i].biotope_description,
+                    substrate: mushroomObject[i].substrate
+                });
 
-            // Every user point is added to the layer
-            insertPoint = new ol.Feature({
-                name: 'getPoint',
-                geometry: new ol.geom.Point(coords),
-                id: mushroomObject[i].id,
-                specie: mushroomObject[i].name,
-                quantity: mushroomObject[i].quantity,
-                unit: mushroomObject[i].unit,
-                finding_place: mushroomObject[i].finding_place,
-                precision: mushroomObject[i].precision,
-                county: mushroomObject[i].county,
-                municipality: mushroomObject[i].municipality,
-                province: mushroomObject[i].province,
-                date: mushroomObject[i].date,
-                comment: mushroomObject[i].comment,
-                biotope: mushroomObject[i].biotope,
-                biotope_desc: mushroomObject[i].biotope_description,
-                substrate: mushroomObject[i].substrate
-            });
+                highlighted_mushroom_layer.getSource().addFeature(insertPoint);
+            }
 
-            highlighted_mushroom_layer.getSource().addFeature(insertPoint);
-        }
-
-        // Set the view to the extent of the user inserted points
-        extent = highlighted_mushroom_layer.getSource().getExtent();
-        map.getView().fit(extent, map.getSize());
-	zoom = map.getView().getZoom();
-	map.getView().setZoom(zoom - 1);
+            // Set the view to the extent of the user inserted points
+	    viewPadding = [40, 40, 40, 40];
+            extent = highlighted_mushroom_layer.getSource().getExtent();
+            map.getView().fit(extent, map.getSize(), {
+	        padding: viewPadding,
+	        minResolution: 13
+	        //maxZoom: 10
+	    });
+	} else {
+	    // If there is no mushroom findings for the user set the view to the center of Sweden
+	    map.getView().setCenter(ol.proj.transform([15, 62], 'EPSG:4326', 'EPSG:3857'));
+	    map.getView().setZoom(5);
+	}
 
         console.log("Get all findings was successful!");
     });
@@ -464,7 +472,7 @@ function updateQuery() {
     }
 
     if (typeof id === 'undefined') {
-        alert("You cannot update a finding added in this session!");
+        alert("You cannot update a finding added in this session! \n\n Ps. try refreshing the page...");
     } else {
         var request = $.ajax({
             url: "/api/updateFinding",
@@ -529,7 +537,7 @@ function deleteQuery() {
     id = existingFeature.id;
 
     if (typeof id === 'undefined') {
-        alert("You cannot delete a finding added in this session!");
+        alert("You cannot delete a finding added in this session! \n\n Ps. try refreshing the page...");
     } else {
         var request = $.ajax({
             url: "/api/deleteFinding",

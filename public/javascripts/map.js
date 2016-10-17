@@ -53,9 +53,7 @@ function initMap() {
             return "/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:mushroom_findings&outputFormat=application%2Fjson&srsname=EPSG:3857&" + 'CQL_FILTER=(bbox(the_geom,' + extent.join(',') +
                 ",'EPSG:3857'" + "))";
         },
-        strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-            //maxZoom: 16  Do we need this? Should it be the same maxZoom in View
-        }))
+        strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({}))
     });
 
     // Default mushroom style
@@ -214,9 +212,7 @@ function initMap() {
                         if (date == "") {
                             date = "N/A";
                         } else {
-                            // DOES NOT WORK.
-                            /*var localDate = new Date(date);
-                            var localDateString = dateFormat(localDate, 'yyyy-mm-dd');*/
+                            date = date.substring(0, 10);
                         }
 
                         // If on spaceTimeAnalysis page - disable the mushroom link in popup
@@ -293,26 +289,26 @@ function initMap() {
                 if (value.county == "'' ") { county = "N/A"; } else { county = value.county; }
                 if (value.municipality == "'' ") { municipality = "N/A"; } else { municipality = value.municipality; }
                 if (value.province == "'' ") { province = "N/A"; } else { province = value.province; }
-                if (value.date == "'' ") { date = "N/A"; } else { date = value.date; }
+                if (value.date == "'' ") { date = "N/A"; } else { date = value.date.substring(0, 10); }
                 if (value.comment == "'' ") { comment = "N/A"; } else { comment = value.comment; }
                 if (value.biotope == "'' ") { biotope = "N/A"; } else { biotope = value.biotope; }
                 if (value.biotope_desc == "'' ") { biotope_desc = "N/A"; } else { biotope_desc = value.biotope_desc; }
                 if (value.substrate == "'' ") { substrate = "N/A"; } else { substrate = value.substrate; }
 
-                existingInfoContent.innerHTML = "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><br><hr>" +
-                    "<p><b>Specie: </b>" + value.specie + "</p>" +
-                    "<p><b>Quantity: </b>" + quantity + "</p>" +
-                    "<p><b>Unit: </b>" + unit + "</p>" +
-                    "<p><b>Finding place: </b>" + finding_place + "</p>" +
-                    "<p><b>Precision: </b>" + precision + "</p>" +
-                    "<p><b>County: </b>" + county + "</p>" +
-                    "<p><b>Municipality: </b>" + municipality + "</p>" +
-                    "<p><b>Province: </b>" + province + "</p>" +
-                    "<p><b>Date: </b>" + date + "</p>" +
-                    "<p><b>Comment: </b>" + comment + "</p>" +
-                    "<p><b>Biotope: </b>" + biotope + "</p>" +
-                    "<p><b>Biotope Description: </b>" + biotope_desc + "</p>" +
-                    "<p><b>Substrate: </b>" + substrate + "</p></div>";
+                existingInfoContent.innerHTML = "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><hr>" +
+                    "<label>Specie: </label>" + value.specie + "<br />" +
+                    "<label>Quantity: </label>" + quantity + "<br />" +
+                    "<label>Unit: </label>" + unit + "<br />" +
+                    "<label>Finding place: </label>" + finding_place + "<br />" +
+                    "<label>Precision: </label>" + precision + "<br />" +
+                    "<label>County: </label>" + county + "<br />" +
+                    "<label>Municipality: </label>" + municipality + "<br />" +
+                    "<label>Province: </label>" + province + "<br />" +
+                    "<label>Date: </label>" + date + "<br />" +
+                    "<label>Comment: </label>" + comment + "<br />" +
+                    "<label>Biotope: </label>" + biotope + "<br />" +
+                    "<label>Biotope Description: </label>" + biotope_desc + "<br />" +
+                    "<label>Substrate: </label>" + substrate + "</div>";
 
                 sidebar.open('existingfindinginfotab');
 
@@ -366,10 +362,8 @@ function initMap() {
                 myHtml += "<li>Comment: " + comment + "</li>";
                 myHtml += "<li>Biotope: " + biotope + "</li>";
                 myHtml += "</ul>";
-		        myHtml += "<button type=\"button\" class=\"btn btn-danger\" onclick=\"clearSelection();\">Clear selection</button>";
+		myHtml += "<button type=\"button\" class=\"btn btn-danger\" onclick=\"clearSelection();\">Clear selection</button>";
 
-                // The HTML was MAGICALLY closing the <ul> with an UNEXPECTED </ul> 
-                // This way, it keeps the content as it should be. Why, oh why..?
                 popupContent.innerHTML = myHtml;
 
                 // Set the popup to the map with the feature coordinates

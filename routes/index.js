@@ -296,7 +296,7 @@ router.get('/api/getAllFindings', isLoggedIn, function(req, res) {
 
     query.on('end', function() {
         if (results.length == 0) {
-            res.json("Get all findings failed!");
+            res.json("noUserFindings");
         } else {
             res.json(results);
         }

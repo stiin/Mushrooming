@@ -107,16 +107,18 @@
 		-->
 
                 <br>
-		<p><b>Turn on/off your geolocation</b></p><br>		
-		<div class="onoffswitch">
+            <p><b>Turn on/off your geolocation</b></p><br>
+                <div class="onoffswitch">
                     <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
                     <label class="onoffswitch-label" for="myonoffswitch">
                         <span class="onoffswitch-inner"></span>
                         <span class="onoffswitch-switch"></span>
                     </label>
                 </div>
+                <br>
+                <p><b>Clear the navigation route</b></p>
+                <button class="btn btn-default" onclick="clearRoute()">Clear route</button>
             </div>
-
             <!-- sidebar content find mushrooms -->
             <div class="sidebar-pane" id="find_mushrooms">
                 <h1 class="sidebar-header">
@@ -128,7 +130,7 @@
 
 
                 <p><b>Working function</b></p><br>
-                <button class="btn btn-default" onclick="sidebar.open('function1')">Closest mushroom</button>
+                <button class="btn btn-default" onclick="sidebar.open('closest_mushroom_page')">Closest mushroom</button>
 
                 <!--getAllDistinctMushroomFindingsSpecies() -->
                 <br>
@@ -136,7 +138,7 @@
 
                 <p><b>Function still to be implemented</b></p>
                 <br>
-                <button class="btn btn-default" onclick="sidebar.open('function2')">Shortest path to the closest mushroom</button>
+                <button class="btn btn-default" onclick="sidebar.open('shortest_path_to_closest_mushroom_page')">Shortest path to the closest mushroom</button>
             </div>
 
             <!-- sidebar content you findings -->
@@ -199,8 +201,8 @@
 
             </div>
 
-            <!-- sidebar content for function 1 -->
-            <div class="sidebar-pane" id="function1">
+            <!-- sidebar content for closest_mushroom_page -->
+            <div class="sidebar-pane" id="closest_mushroom_page">
                 <h1 class="sidebar-header">
                     Closest mushroom
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -214,14 +216,24 @@
                 </div>
 
                 <br>
+                <p><b>Which location do you want to use?</b></p>
+                <form>
+                    <input type="radio" id="closest_automatic" name="location_mode" value="automatic" onclick="document.getElementById('manual_location_button').disabled = true" checked> Use current location<br>
+                    <input type="radio" name="location_mode" value="manual" onclick="document.getElementById('manual_location_button').disabled = false"> Manually specify the location<br>
+                </form>
+
+                <button type="button" id="manual_location_button" class="btn btn-info" onclick="setStartPoint()" disabled="truec">Specify location</button>
+
+
+                <br>
                 <br>
 
-                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(false,document.getElementById('tags').value)">SEARCH</button>
+                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_automatic').checked,false,document.getElementById('tags').value)">SEARCH</button>
                 <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
             </div>
 
-            <!-- sidebar content for function 2 -->
-            <div class="sidebar-pane" id="function2">
+            <!-- sidebar content for fshortest_path_to_closest_mushroom_page -->
+            <div class="sidebar-pane" id="shortest_path_to_closest_mushroom_page">
                 <h1 class="sidebar-header">
 		    Shortest path to the closest mushroom
 		    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -234,10 +246,25 @@
                     <input type="text" id="tags2">
                 </div>
                 <br>
+                <p><b>Which location do you want to use?</b></p>
+                <form>
+                    <input type="radio" id="closest_navigation_automatic" name="location_navigation_mode" value="automatic" onclick="document.getElementById('manual_location_navigation_button').disabled = true" checked> Use current location<br>
+                    <input type="radio" name="location_navigation_mode" value="manual" onclick="document.getElementById('manual_location_navigation_button').disabled = false"> Manually specify the location<br>
+                </form>
+                <button type="button" id="manual_location_navigation_button" class="btn btn-info" onclick="setStartPoint()" disabled="true">Specify location</button>
+                <br>
+                <br>
+                <p><b>Which travel mode do you want to use?</b></p>
+                <form>
+                    <input type="radio" name="travel_mode" value="walking" checked> Walking<br>
+                    <input type="radio" name="travel_mode" value="cycling"> Cycling<br>
+                    <input type="radio" name="travel_mode" value="driving"> Driving<br>
+                </form>
+                <br>
                 <br>
 
                 <!-- Hardcoded location FIX ME -->
-                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(true,document.getElementById('tags2').value)">SEARCH</button>
+                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_navigation_automatic').checked,true,document.getElementById('tags2').value)">SEARCH</button>
                 <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
             </div>
 

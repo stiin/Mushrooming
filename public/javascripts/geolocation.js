@@ -107,9 +107,7 @@ function navigateToMush(startLat, startLon, endLat, endLon, travelMode, drawRout
 var vectorLayer = null;
 function drawMultiplePointsRoute(multiP){
 
-    if(vectorLayer != null){
-        map.removeLayer(vectorLayer);
-    }
+    clearRoute();
 
     var vectorSource = new ol.source.Vector();
         vectorLayer = new ol.layer.Vector({
@@ -134,7 +132,16 @@ function drawMultiplePointsRoute(multiP){
         vectorSource.addFeature(feature);
 
         map.addLayer(vectorLayer);
+        view.fit(vectorLayer.getSource().getExtent(),map.getSize());
+        //map.setTarget(vectorLayer);
+    //var pan = new ol.animation.pan({
+    //    source:map.getView().getCenter()
+    //});
+    //    map.beforeRender(pan);
+        //view.setCenter(view.values_.center);
 
+        //map.updateSize();.
+        //map.zoomTo(vectorLayer.getExtent().getZoomExtent());
         //view.setCenter(centerPos);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,3 +155,52 @@ accessToken = 'pk.eyJ1Ijoic3RpaW4iLCJhIjoiY2l0NnpsN2h5MDAwZjJ1bWZjOGg1d2ltOSJ9.S
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+function clearRoute(){
+    if(vectorLayer != null){
+        map.removeLayer(vectorLayer);
+        startPoint.setGeometry(null);
+    }
+}
+
+var startPoint = new ol.Feature();
+startPoint.setStyle(new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 6,
+        fill: new ol.style.Fill({
+            color: '#FF0000'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#000000',
+            width: 2
+        })
+    })
+}));
+
+var startPointLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        features: [startPoint]
+    })
+});
+
+var initedStartPointLayer = false;
+var manuallyChosenStartPoint = null;
+
+function setStartPoint(){
+
+    if(!initedStartPointLayer){
+        map.addLayer(startPointLayer);
+        initedStartPointLayer = true;
+    }
+
+    console.log("set the start point");
+
+    startPoint.setGeometry(null);
+
+    map.once('click', function(event) {
+        console.log("setting geometry");
+        startPoint.setGeometry(new ol.geom.Point(event.coordinate));
+        var transform = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
+        manuallyChosenStartPoint = transform(event.coordinate);
+        console.log("geometry set");
+    });
+}

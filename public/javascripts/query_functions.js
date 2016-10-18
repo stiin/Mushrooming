@@ -132,10 +132,10 @@ function getAllDistinctMushroomFindingsSpecies() {
 
         var availableMushrooms = [];
         for (var i = 0; i < mushroomObject.length; i++) {
-
             var specie = mushroomObject[i].name;
             availableMushrooms.push(specie);
         }
+
         initSearch(availableMushrooms);
     });
 
@@ -148,22 +148,16 @@ function getAllDistinctMushroomFindingsSpecies() {
 // Get the closest mushroom of a specific type from a given coordinate
 function getClosestDesiredMushroom(automatic, shouldNavigate, mushroom_type) {
 
-    if(userCoords == null){
-        window.alert("Couldn't receive any position. Go to the Setting and turn on the geolocation if you didn't provide :)!")
-    }
-
     var latitude = null;
     var longitude = null;
 
-    if(automatic) {
+    if (automatic) {
         latitude = userCoords[1];
         longitude = userCoords[0];
     } else {
         latitude = manuallyChosenStartPoint[1];
         longitude = manuallyChosenStartPoint[0];
     }
-
-
     // Unselect all features when using the function, remove the popup of it and clear highlighted mushrooms from this function
     selectInteractionHighlight.getFeatures().clear();
     map.removeOverlay(popup);
@@ -564,7 +558,24 @@ function deleteQuery() {
 
         request.done(function(msg) {
             console.log(msg);
-            highlightFeature.setGeometry(null);
+	    highlightFeature.setStyle(new ol.style.Style({
+	        text: new ol.style.Text({
+		    textAlign: "center",
+		    textBaseline: "middle",
+		    text: "Removed",
+		    font: "bold 16px Arial",
+		    fill: new ol.style.Fill({
+			color: 'green',
+			width: 20
+		    }),
+		    stroke: new ol.style.Stroke({
+		        color: 'black',
+			width: 5
+		    }),
+		    offsetY: 5
+		})
+	    })); 
+            //highlightFeature.setGeometry(null);
         });
 
         request.fail(function(jqXHR, textStatus, state) {

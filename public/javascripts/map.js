@@ -196,18 +196,22 @@ function initMap() {
                         quantity = features[i].get('quantity');
                         comment = features[i].get('comment');
                         biotope = features[i].get('biotope');
+			county = features[i].get('county');
+			province = features[i].get('province');
                         date = features[i].get('date');
 
                         // Dirty solution for handling the data
-                        if (finding_place == "") { finding_placce = "N/A"; }
+                        if (finding_place == "" || finding_place == "'' ") { finding_placce = "N/A"; }
                         if (precision == "") {
                             precision = "N/A";
                         } else {
                             precision = precision + " m";
                         }
                         if (quantity == "-1") { quantity = "N/A"; }
-                        if (comment == "") { comment = "N/A"; }
-                        if (biotope == "") { biotope = "N/A"; }
+                        if (comment == "" || comment == "'' ") { comment = "N/A"; }
+                        if (biotope == "" || biotope == "'' ") { biotope = "N/A"; }
+			if (county == "" || county == "'' ") { county = "N/A"; }
+			if (province == "" || province == "'' ") { province = "N/A"; }
                         // Format the date to yyyy-mm-dd
                         if (date == "") {
                             date = "N/A";
@@ -234,6 +238,8 @@ function initMap() {
                             myMushroomInfo += "<p><b>Quantity: </b>" + quantity + "</p>";
                             myMushroomInfo += "<p><b>Finding place: </b>" + finding_place + "</p>";
                             myMushroomInfo += "<p><b>Precision: </b>" + precision + "</p>";
+			    myMushroomInfo += "<p><b>County: </b>" + county + "</p>";
+			    myMushroomInfo += "<p><b>Province: </b>" + province + "</p>";
                             myMushroomInfo += "<p><b>Biotope: </b>" + biotope + "</p>";
                             myMushroomInfo += "<p><b>Comment: </b>" + comment + "</p><div>";
 
@@ -334,15 +340,15 @@ function initMap() {
                 };
 
                 // Dirty solution for handling the data
-                if (finding_place == "") { finding_place = "N/A"; }
+                if (finding_place == "" || finding_place == "'' ") { finding_place = "N/A"; }
                 if (precision == "") {
                     precision = "N/A";
                 } else {
                     precision = precision + " m";
                 }
                 if (quantity == "-1") { quantity = "N/A"; }
-                if (comment == "") { comment = "N/A"; }
-                if (biotope == "") { biotope = "N/A"; }
+                if (comment == "" || comment == "'' ") { comment = "N/A"; }
+                if (biotope == "" || biotope == "'' ") { biotope = "N/A"; }
                 // Format the date to yyyy-mm-dd
                 if (date == "") {
                     date = "N/A";
@@ -389,7 +395,7 @@ function initMap() {
         }
         // if the click isn't a feature remove the popup
         map.removeOverlay(popup);
-        //sidebar.close("info");
+        sidebar.close();
     });
 
     // Load the tags for autocomplete textbox for Find closest mushroom of specific type

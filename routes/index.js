@@ -288,7 +288,7 @@ router.get('/api/getAllFindings', isLoggedIn, function(req, res) {
 
     var user_id = global_user.id;
 
-    var query = apiClient.query("SELECT id, user_id, lat, lon, name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_description, substrate FROM mushroom_findings_test WHERE user_id = ($1)", [user_id]);
+    var query = apiClient.query("SELECT id, user_id, lat, lon, name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_description, substrate FROM mushroom_findings WHERE user_id = ($1)", [user_id]);
 
     query.on('row', function(row) {
         results.push(row);
@@ -324,7 +324,7 @@ router.post('/api/insertFinding', isLoggedIn, function(req, res) {
     var substrate = req.body.substrate;
     var user_id = global_user.id;
 
-    var query = apiClient.query("INSERT INTO mushroom_findings_test (user_id, lat, lon, name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_description, substrate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)", [user_id, latitude, longitude, mushroom_name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_desc, substrate]);
+    var query = apiClient.query("INSERT INTO mushroom_findings (user_id, lat, lon, name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_description, substrate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)", [user_id, latitude, longitude, mushroom_name, quantity, unit, finding_place, precision, county, municipality, province, date, comment, biotope, biotope_desc, substrate]);
 
     query.on('row', function(row) {
         results.push(row);
@@ -360,7 +360,7 @@ router.post('/api/updateFinding', isLoggedIn, function(req, res) {
     var id = req.body.id;
     var user_id = global_user.id;
 
-    var query = apiClient.query("UPDATE mushroom_findings_test SET name = ($1), quantity = ($2), unit = ($3), finding_place = ($4), precision = ($5), county = ($6), municipality = ($7), province = ($8), date = ($9), comment = ($10), biotope = ($11), biotope_description = ($12), substrate = ($13) WHERE id = ($14) AND user_id = ($15)", [updateMushroomName, updateQuantity, updateUnit, updateFindingPlace, updatePrecision, updateCounty, updateMunicipality, updateProvince, updateDate, updateComment, updateBiotope, updateBiotope_desc, updateSubstrate, id, user_id]);
+    var query = apiClient.query("UPDATE mushroom_findings SET name = ($1), quantity = ($2), unit = ($3), finding_place = ($4), precision = ($5), county = ($6), municipality = ($7), province = ($8), date = ($9), comment = ($10), biotope = ($11), biotope_description = ($12), substrate = ($13) WHERE id = ($14) AND user_id = ($15)", [updateMushroomName, updateQuantity, updateUnit, updateFindingPlace, updatePrecision, updateCounty, updateMunicipality, updateProvince, updateDate, updateComment, updateBiotope, updateBiotope_desc, updateSubstrate, id, user_id]);
 
     query.on('row', function(row) {
         results.push(row);
@@ -383,7 +383,7 @@ router.post('/api/deleteFinding', isLoggedIn, function(req, res) {
     var id = req.body.id;
     var user_id = global_user.id;
 
-    var query = apiClient.query("DELETE FROM mushroom_findings_test WHERE id = ($1) AND  user_id = ($2)", [id, user_id]);
+    var query = apiClient.query("DELETE FROM mushroom_findings WHERE id = ($1) AND  user_id = ($2)", [id, user_id]);
 
     query.on('row', function(row) {
         results.push(row);

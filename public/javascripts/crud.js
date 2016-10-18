@@ -1,7 +1,7 @@
 var insertCoords, insertPoint;
-           
+             
 function crud() {
-
+  
     sidebar.open('home');
 
     // This will load every user finding to the map
@@ -87,7 +87,8 @@ function crud() {
                         "<label>Biotope: </label> <input type='text' id='biotope'><br />" +
                         "<label>Biotope description: </label> <input type='text' id='biotope_desc'><br />" +
                         "<label>Substrate: </label> <input type='text' id='substrate'><br />" +
-                        "<br><input type='submit' class='btn btn-default' value='Insert' onclick='return checkInsert();'>" +
+                        "<br><input type='submit' class='btn btn-info' value='INSERT' onclick='return checkInsert();'>" + " " + 
+			"<button type='button' class='btn btn-warning' onclick='sidebar.close()'>ABORT</button>" +
                     "</form></div>";	
 
                 insertCoords = event.coordinate;
@@ -116,23 +117,28 @@ function crud() {
         value = highlightFeature.values_;
 	image = "mushroom";
 
+	date = value.date.substring(0, 10);
+	if (value.quantity == -1) { quantity =  ""; } else { quantity = value.quantity }
+	if (value.precision == 0) { precision = ""; } else { precision = value.precision }
+	
         // Form is calling a updateQuery() function in query_functions.js
 	updateInfoContent.innerHTML = 
             "<form role='form' action='javascript:updateQuery()'>" +
             	"<label>Specie: </label> <input type='text' id='updateSpecie' placeholder=" + value.specie + "><br />" +
-            	"<label>Quantity: </label> <input type='text' id='updateQuantity' placeholder=" + value.quantity + "><br />" +
+            	"<label>Quantity: </label> <input type='text' id='updateQuantity' placeholder=" + quantity + "><br />" +
             	"<label>Unit: </label> <input type='text' id='updateUnit' placeholder=" + value.unit + "><br />" +
             	"<label>Finding place: </label> <input type='text' id='updateFindingPlace' placeholder=" + value.finding_place + "><br />" +
-            	"<label>Precision: </label> <input type='text' id='updatePrecision' placeholder=" + value.precision + "><br />" +
+            	"<label>Precision: </label> <input type='text' id='updatePrecision' placeholder=" + precision + "><br />" +
             	"<label>County: </label> <input type='text' id='updateCounty' placeholder=" + value.county + "><br />" +
            	"<label>Municipality: </label> <input type='text' id='updateMunicipality' placeholder=" + value.municipality + "><br />" +
             	"<label>Province: </label> <input type='text' id='updateProvince' placeholder=" + value.province + "><br />" +
-           	"<label>Date: </label> <input type='text' id='updateDate' placeholder=" + value.date + "><br />" +
+           	"<label>Date: </label> <input type='text' id='updateDate' placeholder=" + date + "><br />" +
             	"<label>Comment: </label> <input type='text' id='updateComment' placeholder=" + value.comment + "><br />" +
             	"<label>Biotope: </label> <input type='text' id='updateBiotope' placeholder=" + value.biotope + "><br />" +
             	"<label>Biotope description: </label> <input type='text' id='updateBiotope_desc' placeholder=" + value.biotope_desc + "><br />" +
             	"<label>Substrate: </label> <input type='text' id='updateSubstrate' placeholder=" + value.substrate + "><br />" +
-            	"<br><input type='submit' value='Update' onclick='return checkUpdate();'>" +
+            	"<br><input type='submit' class='btn btn-info' value='UPDATE' onclick='return checkUpdate();'>" + " " + 
+		"<button type='button' class='btn btn-warning' onclick='sidebar.close()'>ABORT</button>" + 
             "</form></div>";
 
 
@@ -164,7 +170,7 @@ function checkInsert() {
 	alert("Remember to write specie with lower cased letters!!");
         return false;
     }
- 	  
+	  
     // Check that if specie field exist in the mushroom_data table
     if (document.getElementById(insertValues[0]).value != "") {
         list = [];
@@ -173,24 +179,23 @@ function checkInsert() {
 	        list.push(uniqueNames[i].name);
 	    }
 	}
+
 	if (list.length < 1) {
 	    alert("Specie couldn't be found from the real mushroom species!");
 	    return false;
-	} else {
-	    return true;
 	}
     }
-
+ 
     // If the quantity and precision are not integers
     if (isNaN(document.getElementById(insertValues[1]).value) == true || isNaN(document.getElementById(insertValues[4]).value) == true) {
-        alert("Quantity and Precision has to be integer!");
+	alert("Quantity and Precision has to be integer!");
         return false;
-    }
-    
+    }  
+
     // Check that inserted date is in the correct form -> its not perfect
     date = document.getElementById(insertValues[8]).value;
     if (date != "") {
-        alertText = "Date is in wrong format!\n\n Correct one is year-month-day -> xxxx-xx-xx";
+        alertText = "Date is in wrong format!\n\nCorrect one is year-month-day -> xxxx-xx-xx";
 	dateValues = date.split('-');
 	var year = parseInt(dateValues[0]), month = parseInt(dateValues[1]), day = parseInt(dateValues[2]);
 
@@ -225,7 +230,7 @@ function checkInsert() {
     }
    
 }
-
+ 
 // Checks the user updated mushroom findings info
 function checkUpdate() {   
 
@@ -252,8 +257,6 @@ function checkUpdate() {
 	if (list.length < 1) {
 	    alert("Specie couldn't be found from the real mushroom species!");
 	    return false;
-	} else {
-	    return true;
 	}
     }
 
@@ -266,7 +269,7 @@ function checkUpdate() {
     // Check that inserted date is in the correct form -> its not perfect
     date = document.getElementById(updateValues[8]).value;
     if (date != "") {
-        alertText = "Date is in wrong format!\n\n Correct one is year-month-day -> xxxx-xx-xx";
+        alertText = "Date is in wrong format!\n\nCorrect one is year-month-day -> xxxx-xx-xx";
 	dateValues = date.split('-');
 	var year = parseInt(dateValues[0]), month = parseInt(dateValues[1]), day = parseInt(dateValues[2]);
 

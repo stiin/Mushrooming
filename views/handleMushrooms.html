@@ -52,6 +52,9 @@
                 <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
             </ul>
 
+	    <ul role="tablist">
+                <li><a href="#sign_out" role="tab"><i class="fa fa-sign-out"></i></a></li>
+            </ul>
         </div>
 
         <!-- Tab panes -->
@@ -66,16 +69,18 @@
 
                 <br>
 		
-		<p>In this part of the application you can handle your own mushroom findings. The possible functionalities are: </p>
+		<p>In this part of the application you can handle your own mushroom findings. The functionalities are: </p>
 		<ul>
 		    <li>Add your own mushroom findings</li>
-		    <li>Update your existing findings</li>
+		    <li>Update your findings</li>
 		    <li>Delete your findings</li>
 		</ul><br>		
 	
-		<p>Start by adding you first finding to the map by opening the second tab!</p><br>
+		<p>Start by adding you first finding to the map by opening the second sidebar tab!</p>
 
-		<p>If you want to go back to the main application click the following link:</p><br>
+		<hr>
+
+		<p>If you want to go back to the main application click the following button:</p><br>
 
                 <a href="/map" class="btn btn-default" role="button">Go back to the main page!</a>
 
@@ -93,9 +98,9 @@
 	 	<ol>
                     <li>Press "Insert new finding" button</li>
 		    <li>Zoom close enough to the map where nature areas highlight and click the nature area</li>
-                    <li>Fill the form with desired attribute information and press insert. Notice the mandatory fields marked with *</li>
+                    <li>Fill the form with desired attribute information and press insert. <i>Notice the mandatory fields marked with (*)</i></li>
                     <li>After that a feature will be shown in the map</li>
-	            <li>If you want to view the content of the recent or existing findings you can click highlighted feature and then update or delete findings as you like. Notice that findings added in the same session cannot be updated or deleted without refreshing the page</li>
+	            <li>If you want to view the content of the recent or existing own findings you can click highlighted feature and then update or delete them as you like. <i>Notice that the findings added in the same session cannot be updated or deleted without refreshing the page</i></li>
 		</ol><br>
 
                 <button id="insert" class="btn btn-default" role="button">Insert new finding</button>
@@ -108,8 +113,6 @@
                     Mushroom info
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-
-                <br>
 
                 <!-- Carousell is added as a div with no content -->
                 <div class="mushroomcontainer">
@@ -142,8 +145,8 @@
                 <p id="existinginfo"></p>
                 <hr>
 
-                <button id="update" class="btn btn-default" role="button">Update</button>
-                <button id="delete" class="btn btn-default" role="button">Delete</button>
+                <button id="update" class="btn btn-info" role="button">UPDATE</button>
+                <button id="delete" class="btn btn-warning" role="button">DELETE</button>
 
             </div>
 
@@ -159,7 +162,20 @@
 
             </div>
 
-        </div>
+	    <!-- sidebar content sign out -->
+            <div class="sidebar-pane" id="sign_out">
+                <h1 class="sidebar-header">
+                    Sign out
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
+                <br><p><b>Do you want to log out?</b></p><br>
+
+                <button type="button" class="btn btn-warning" onclick="logoutUser()">SIGN OUT</button>
+                
+            </div>
+
+	</div>
 
     </div>
 

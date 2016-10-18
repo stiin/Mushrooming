@@ -8,6 +8,10 @@ html, body, #map {
   height: 100%;
 }
 
+.labelSpecies {
+  display: default;
+  width: 300px;
+}
 
 label {
   display: inline-block;

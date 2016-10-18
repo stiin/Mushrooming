@@ -389,7 +389,7 @@ function initMap() {
         }
         // if the click isn't a feature remove the popup
         map.removeOverlay(popup);
-        sidebar.close("info");
+        //sidebar.close("info");
     });
 
     // Load the tags for autocomplete textbox for Find closest mushroom of specific type

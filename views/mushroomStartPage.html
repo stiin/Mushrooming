@@ -19,7 +19,6 @@
     <link rel="stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css'>
 
     <!-- jQuery -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script> -->
     <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -52,225 +51,268 @@
 </head>
 
 <!-- Every time when a page is opened these functions are initialized -->
+<body onload="initMap(); initLocation();"> <!--autoLocationClicked(document.getElementById('myonoffswitch'));-->
 
-<body onload="initMap(); autoLocationClicked(document.getElementById('myonoffswitch'));"> <!-- routing(); -->
+        <div id="sidebar" class="sidebar collapsed">
 
-    <div id="sidebar" class="sidebar collapsed">
-
-        <!-- Nav tabs -->
-        <div class="sidebar-tabs">
-            <ul role="tablist">
-                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
-                <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
-                <li><a href="#space_time_analysis" role="tab"><i class="fa fa-rocket"></i></a></li>
-            </ul>
-
-            <ul role="tablist">
-                <li><a href="#sign_out" role="tab"><i class="fa fa-sign-out"></i></a></li>
-            </ul>
-        </div>
-
-        <!-- Tab panes -->
-        <div class="sidebar-content">
-
-            <!-- sidebar content home -->
-            <div class="sidebar-pane" id="home">
-                <h1 class="sidebar-header">
-                    <p>Mushrooming</p>
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-
-                <br>
-                <p><b>Welcome to the mushrooming application!</b></p>
-                <br>
-                <p>The main functionalities in this application are:</p>
-                <ul>
-                    <li>Viewing different mushroom findings across Sweden</li>
-                    <li>Finding the closest mushroom picking places of desired mushrooms and routes to these</li>
-                    <li>Making light spacetime analysis of these findings</li>
-                    <li>Possibility to insert, update and delete own mushroom findings</li>
+            <!-- Nav tabs -->
+            <div class="sidebar-tabs">
+                <ul role="tablist">
+                    <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                    <li><a href="#find_mushrooms" role="tab"><i class="fa fa-database"></i></a></li>
+                    <li><a href="#your_findings" role="tab"><i class="fa fa-pencil-square-o "></i></a></li>
+                    <li><a href="#space_time_analysis" role="tab"><i class="fa fa-rocket"></i></a></li>
                 </ul>
-                <hr>
 
-                <!--
-                <br>
-                <p><b>Routing functionality (only works in the nature areas):</b></p>
-                <br>
-                <button id="start">start location</button>
-                <br>
-                <button id="dest">destination location</button>
-                <br>
-                <button id="navigate">calculate route</button>
-                <br>
-                <button id="clear">clear route</button>
-		-->
-
-                <br>
-            <p><b>Turn on/off your geolocation</b></p><br>
-                <div class="onoffswitch">
-                    <input checked="false" type="checkbox" onclick="autoLocationClicked(this);" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-                    <label class="onoffswitch-label" for="myonoffswitch">
-                        <span class="onoffswitch-inner"></span>
-                        <span class="onoffswitch-switch"></span>
-                    </label>
-                </div>
-                <br>
-                <p><b>Clear the navigation route</b></p>
-                <button class="btn btn-default" onclick="clearRoute()">Clear route</button>
-            </div>
-            <!-- sidebar content find mushrooms -->
-            <div class="sidebar-pane" id="find_mushrooms">
-                <h1 class="sidebar-header">
-                    Find mushrooms with tools
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-
-                <br><p>Find mushroom tab includes functionalities that can be used as tools to find the closest desired mushroom and shortest routes to these.</p><br>
-
-
-                <p><b>Working function</b></p><br>
-                <button class="btn btn-default" onclick="sidebar.open('closest_mushroom_page')">Closest mushroom</button>
-
-                <!--getAllDistinctMushroomFindingsSpecies() -->
-                <br>
-                <br>
-
-                <p><b>Function still to be implemented</b></p>
-                <br>
-                <button class="btn btn-default" onclick="sidebar.open('shortest_path_to_closest_mushroom_page')">Shortest path to the closest mushroom</button>
+                <ul role="tablist">
+                    <li><a href="#settings" role="tab"><i class="fa fa-cog"></i></a></li>
+                    <li><a href="#sign_out" role="tab"><i class="fa fa-sign-out"></i></a></li>
+                </ul>
             </div>
 
-            <!-- sidebar content you findings -->
-            <div class="sidebar-pane" id="your_findings">
-                <h1 class="sidebar-header">
-                    Mushroom findings
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
+            <!-- Tab panes -->
+            <div class="sidebar-content">
 
-                <br>
-                <p>Click the following link for adding, updating and deleting you own mushroom findings: </p>
-                <br>
-                <a href="/handleMushrooms" class="btn btn-default" role="button">Handle your mushroom findings</a>
+                <!-- sidebar content home -->
+                <div class="sidebar-pane" id="home">
+                    <h1 class="sidebar-header">
+                        <p>Mushrooming</p>
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
 
-            </div>
+                    <br><p><b>Welcome to the mushrooming application!</b></p><br>
 
-            <!-- sidebar content you findings -->
-            <div class="sidebar-pane" id="space_time_analysis">
-                <h1 class="sidebar-header">
-                    Space-time analysis
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
+                    <p>The main functionalities in this application are:</p>
+                    <ul>
+                        <li>Viewing different mushroom findings across Sweden</li>
+                        <li>Finding the closest mushroom picking places of desired mushrooms and routes to these</li>
+                        <li>Making light spacetime analysis of these findings</li>
+                        <li>Possibility to insert, update and delete own mushroom findings</li>
+                    </ul>
+                    <hr>
 
-                <br>
-                <p>Make some awesome space-time analysis with polygons...</p>
-                <br>
-                <a href="/spaceTimeAnalysis" class="btn btn-default" role="button">Space-Time Analysis</a>
 
-            </div>
-
-            <!-- sidebar content sign out -->
-            <div class="sidebar-pane" id="sign_out">
-                <h1 class="sidebar-header">
-                    Sign out
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-
-                <br>
-                <p><b>Do you want to log out?</b></p>
-                <br>
-                <button type="button" class="btn btn-warning" onclick="logoutUser()">SIGN OUT</button>
-                <br>
-
-            </div>
-
-            <!-- sidebar content for the mushroom info -->
-            <div class="sidebar-pane" id="info">
-                <h1 class="sidebar-header">
-                    Mushroom info
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-
-                <br>
-
-                <!-- Carousell is added as a div with no content -->
-                <div class="mushroomcontainer">
-                    <div class="mushroomcarousel"></div>
-                    <div class="mushroomcontent"></div>
                 </div>
 
-            </div>
+                <!-- sidebar content find mushrooms -->
+                <div class="sidebar-pane" id="find_mushrooms">
+                    <h1 class="sidebar-header">
+                        Find mushrooms with tools
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
 
-            <!-- sidebar content for closest_mushroom_page -->
-            <div class="sidebar-pane" id="closest_mushroom_page">
-                <h1 class="sidebar-header">
-                    Closest mushroom
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
+                    <br><p>Find mushroom tab includes functionalities that can be used as tools to find the closest desired mushroom and shortest routes to these.</p><br>
 
-                <br><p>This application functionality will find the closest desired mushroom specie based on your location. In order to use this functionality you have to assign the desired mushroom specie that you are looking for. When you start typing the mushroom name the textbox will guide you to find the correct one.</p><br>
+                    <p><b>Application functions</b></p><br>
+                    <button class="btn btn-default" onclick="sidebar.open('closest_mushroom_page')">Closest mushroom</button>
 
-                <div class="ui-widget">
-                    <label for="tags">Mushroom species: </label>
-                    <input type="text" id="tags">
+                    <br><br>
+
+                    <button class="btn btn-default" onclick="sidebar.open('shortest_path_to_closest_mushroom_page')">Shortest path to the closest mushroom</button>
+
                 </div>
 
-                <br>
-                <p><b>Which location do you want to use?</b></p>
-                <form>
-                    <input type="radio" id="closest_automatic" name="location_mode" value="automatic" onclick="document.getElementById('manual_location_button').disabled = true" checked> Use current location<br>
-                    <input type="radio" name="location_mode" value="manual" onclick="document.getElementById('manual_location_button').disabled = false"> Manually specify the location<br>
-                </form>
+                <!-- sidebar content you findings -->
+                <div class="sidebar-pane" id="your_findings">
+                    <h1 class="sidebar-header">
+                        Mushroom findings
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
 
-                <button type="button" id="manual_location_button" class="btn btn-info" onclick="setStartPoint()" disabled="truec">Specify location</button>
+                    <br>
+                    <p>Click the following link for adding, updating and deleting you own mushroom findings: </p>
+                    <br>
+                    <a href="/handleMushrooms" class="btn btn-default" role="button">Handle your mushroom findings</a>
 
-
-                <br>
-                <br>
-
-                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_automatic').checked,false,document.getElementById('tags').value)">SEARCH</button>
-                <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
-            </div>
-
-            <!-- sidebar content for fshortest_path_to_closest_mushroom_page -->
-            <div class="sidebar-pane" id="shortest_path_to_closest_mushroom_page">
-                <h1 class="sidebar-header">
-		    Shortest path to the closest mushroom
-		    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-		</h1>
-
-                <br><p>This application functionality will find the closest desired mushroom specie based on your location and calculates the shorthest route there using walkable routes. In order to use this functionality you have to assign the desired mushroom specie that you are looking for. When you start typing the mushroom name the textbox will quide you to find the correct one.</p><br>
-
-                <div class="ui-widget">
-                    <label for="tags2">Mushroom species: </label>
-                    <input type="text" id="tags2">
                 </div>
-                <br>
-                <p><b>Which location do you want to use?</b></p>
-                <form>
-                    <input type="radio" id="closest_navigation_automatic" name="location_navigation_mode" value="automatic" onclick="document.getElementById('manual_location_navigation_button').disabled = true" checked> Use current location<br>
-                    <input type="radio" name="location_navigation_mode" value="manual" onclick="document.getElementById('manual_location_navigation_button').disabled = false"> Manually specify the location<br>
-                </form>
-                <button type="button" id="manual_location_navigation_button" class="btn btn-info" onclick="setStartPoint()" disabled="true">Specify location</button>
-                <br>
-                <br>
-                <p><b>Which travel mode do you want to use?</b></p>
-                <form>
-                    <input type="radio" name="travel_mode" value="walking" checked> Walking<br>
-                    <input type="radio" name="travel_mode" value="cycling"> Cycling<br>
-                    <input type="radio" name="travel_mode" value="driving"> Driving<br>
-                </form>
-                <br>
-                <br>
 
-                <!-- Hardcoded location FIX ME -->
-                <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_navigation_automatic').checked,true,document.getElementById('tags2').value)">SEARCH</button>
-                <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
+                <!-- sidebar content you findings -->
+                <div class="sidebar-pane" id="space_time_analysis">
+                    <h1 class="sidebar-header">
+                        Space-time analysis
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+
+                    <br><p>Make some awesome space-time analysis with polygons...</p><br>
+
+                    <a href="/spaceTimeAnalysis" class="btn btn-default" role="button">Space-Time Analysis</a>
+
+                </div>
+
+                <!-- sidebar content settings-->
+                <div class="sidebar-pane" id="settings">
+                    <h1 class="sidebar-header">
+                        Settings
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+
+                    <br><p><b>Where am I?</b></p>
+                    <button type="button" id="show_current_position" class="btn btn-info" onclick="currentPosition()">Show current position</button>
+
+                    <br><br>
+
+                    <br><p><b>Turn on/off your geolocation</b></p>
+                    <div class="onoffswitch">
+                        <input type="checkbox" onclick="autoLocationClicked(this)" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
+                        <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- sidebar content sign out -->
+                <div class="sidebar-pane" id="sign_out">
+                    <h1 class="sidebar-header">
+                        Sign out
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+
+                    <br><p><b>Do you want to log out?</b></p><br>
+
+                    <button type="button" class="btn btn-warning" onclick="logoutUser()">SIGN OUT</button>
+
+                    <br><br>
+                    <br><p><b>Turn on/off your geolocation</b></p><br>
+                    <div class="onoffswitch">
+                        <input type="checkbox" onclick="autoLocationClicked(this)" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
+                        <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- sidebar content for the mushroom info -->
+                <div class="sidebar-pane" id="info">
+                    <h1 class="sidebar-header">
+                        Mushroom info
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+
+                    <!-- Carousell is added as a div with no content -->
+                    <div class="mushroomcontainer">
+                        <div class="mushroomcarousel"></div>
+                        <div class="mushroomcontent"></div>
+                    </div>
+
+                </div>
+
+                <!-- sidebar content for closest_mushroom_page -->
+                <div class="sidebar-pane" id="closest_mushroom_page">
+                    <h1 class="sidebar-header">
+                        Closest mushroom
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+
+                    <br><p>This application functionality will find the closest desired mushroom specie based on your or manually specified location. In order to use this functionality you have to do the following:</p><br>
+
+            <ol>
+                <li>Type the mushroom specie that you are looking for</li>
+                <li>Select whether to use your or manually specified location</li>
+                <li>In order to specify your own location manually, click the "Specify location" and click the map</li>
+                </ol><br>
+
+                    <div class="ui-widget">
+                        <label class="labelSpecies" for="tags">1. Mushroom species: </label><br>
+                        <input type="text" id="tags">
+                    </div>
+
+                    <br><p><b>2. Which location do you want to use?</b></p>
+                    <form>
+                        <input type="radio" id="closest_automatic" name="location_mode" value="automatic" onclick="document.getElementById('manual_location_button').disabled = true" checked> Use current location<br>
+                        <input type="radio" name="location_mode" value="manual" onclick="document.getElementById('manual_location_button').disabled = false"> Manually specify the location<br>
+                    </form><br>
+
+                    <button type="button" id="manual_location_button" class="btn btn-info" onclick="setStartPoint()" disabled="true">Specify location</button>
+
+
+                    <br><br>
+
+                    <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_automatic').checked,false,document.getElementById('tags').value)">SEARCH</button>
+                    <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
+                </div>
+
+                <!-- sidebar content for fshortest_path_to_closest_mushroom_page -->
+                <div class="sidebar-pane" id="shortest_path_to_closest_mushroom_page">
+                    <h1 class="sidebar-header">
+                Shortest path to the closest mushroom
+                <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+            </h1>
+
+                    <br><p>This application functionality will find the closest desired mushroom specie based on your or manually specified location and calculates the shortest route there using walk, cycle and driving travel modes. In order to use this functionality you have to do the following:</p><br>
+
+            <ol>
+                <li>Type the mushroom specie that you are looking for</li>
+                <li>Select whether the routing uses your or manually specified location</li>
+                <li>In order to specify your own location manually, select "Manually specify the location" from the radiobox, click the "Specify location" and click the map</li>
+                <li>Select your preferred tarvel mode</li>
+                </ol><br>
+
+                    <div class="ui-widget">
+                        <label class="labelSpecies" for="tags2">1. Mushroom species: </label><br>
+                        <input type="text" id="tags2">
+                    </div>
+
+                    <br><p><b>2. Which location do you want to use?</b></p>
+                    <form>
+                        <input type="radio" id="closest_navigation_automatic" name="location_navigation_mode" value="automatic" onclick="document.getElementById('manual_location_navigation_button').disabled = true" checked> Use current location<br>
+                        <input type="radio" name="location_navigation_mode" value="manual" onclick="document.getElementById('manual_location_navigation_button').disabled = false"> Manually specify the location<br>
+                    </form><br>
+
+                    <button type="button" id="manual_location_navigation_button" class="btn btn-info" onclick="setStartPoint()" disabled="true">3. Specify location</button>
+                    <br><br>
+
+                    <p><b>4. Which travel mode do you want to use?</b></p>
+                    <form>
+                        <input type="radio" name="travel_mode" value="walking" checked> Walking<br>
+                        <input type="radio" name="travel_mode" value="cycling"> Cycling<br>
+                        <input type="radio" name="travel_mode" value="driving"> Driving<br>
+                    </form>
+                    <br>
+
+                    <!--<button class="btn btn-default" onclick="sidebar.open('navigation_detail_page')">Shortest path to the closest mushroom</button>-->
+                    <!--<button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_navigation_automatic').checked, true, document.getElementById('tags2').value)">SEARCH</button>-->
+                    <button type="button" class="btn btn-info" onclick="getClosestDesiredMushroom(document.getElementById('closest_navigation_automatic').checked, true, document.getElementById('tags2').value);">SEARCH</button>
+
+                    <button type="button" class="btn btn-warning" onclick="sidebar.close('find_mushrooms');">ABORT</button>
+                </div>
+
+
+                <!-- Sidebar content for the navigation -->
+                <div class="sidebar-pane" id="navigation_detail_page">
+                    <h1 class="sidebar-header">
+                        Navigation Detail
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+                    <br><br>
+
+                    <table width="100%">
+                    <tr><td><p>Start point: </p></td><td><p id="startpoint_navi"></p></td></tr>
+                    <tr><td><p>Destination: </p></td><td><p id="destination_navi"></p></td></tr>
+                    <tr><td><p>Mode: </p></td><td><p id="travelmode_navi"></p></td></tr>
+                    <tr><td><p>Distance: </p></td><td><p id="distance_navi"></p></td></tr>
+                    <tr><td><p>Time: </p></td><td><p id="duration_navi"></p></td></tr>
+                    </table>
+
+                    <br><br><br><br>
+
+                    <!-- Clear the navigation route -->
+                    <!--<br><p><b>Clear the navigation route</b></p>-->
+                    <button class="btn btn-default" onclick="clearRoute()">Clear the route</button>
+
+                    <br><br>
+
+                    <button type="button" class="btn btn-warning" onclick="sidebar.open('shortest_path_to_closest_mushroom_page');">Go back</button>
+
+
+                </div>
+
             </div>
 
         </div>
-
-    </div>
 
     <!-- Map container -->
     <div id="map" class="sidebar-map"></div>

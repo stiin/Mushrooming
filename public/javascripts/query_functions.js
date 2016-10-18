@@ -148,16 +148,22 @@ function getAllDistinctMushroomFindingsSpecies() {
 // Get the closest mushroom of a specific type from a given coordinate
 function getClosestDesiredMushroom(automatic, shouldNavigate, mushroom_type) {
 
+    if(userCoords == null){
+        window.alert("Couldn't receive any position. Go to the Setting and turn on the geolocation if you didn't provide :)!")
+    }
+
     var latitude = null;
     var longitude = null;
 
-    if (automatic) {
+    if(automatic) {
         latitude = userCoords[1];
         longitude = userCoords[0];
     } else {
         latitude = manuallyChosenStartPoint[1];
         longitude = manuallyChosenStartPoint[0];
     }
+
+
     // Unselect all features when using the function, remove the popup of it and clear highlighted mushrooms from this function
     selectInteractionHighlight.getFeatures().clear();
     map.removeOverlay(popup);

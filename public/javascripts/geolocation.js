@@ -36,11 +36,13 @@ function updatePositionMap(){
     var acc = geolocation.getAccuracyGeometry();
     if(acc != null) {
         accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-        currentPositionMarker.setGeometry(new ol.geom.Point(coordinate));
     }
+    
+    currentPositionMarker.setGeometry(new ol.geom.Point(coordinate));
 
     if(!hasbeencentered) {
         view.setCenter(coordinate);
+		view.setZoom(13);
         hasbeencentered = true;
     }
 }
@@ -98,8 +100,10 @@ function currentPosition(){
 
     if(userCoords == null){
         window.alert("Couldn't receive any position. Go to the Setting and turn on the geolocation if you didn't provide :)!")
-    }
+		initMap();
+	}
 
     var coordinate = geolocation.getPosition();
     view.setCenter(coordinate);
+	view.setZoom(13);
 }

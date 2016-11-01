@@ -528,5 +528,27 @@ router.post('/api/stpAnalyse', function(req, res) {
     });
 });
 
+// Find the most popular mushroom finding place (nr. of logged mushroom findings, disregarding quantity)
+router.post('/api/mostPopularFindingPlace', function(req, res) {
+    var results = [];
+    var data = { id: req.body.id };
+
+    var query = apiClient.query("SELECT * FROM sd_most_popular_finding($1)", [data.id]);
+
+    query.on('row', function(row) {
+        results.push(row);
+    });
+
+    query.on('end', function() {
+        if (results.length == 0) {
+            res.json("noMushroomFindings");
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+
+
 // The position of this might affect?! It has been changed
 module.exports = router;

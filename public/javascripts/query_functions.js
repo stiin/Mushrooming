@@ -111,6 +111,7 @@ function initSearch(availableTags) {
     $("#tags2").autocomplete({
         source: availableTags
     });
+        
 }
 
 // For the autocomplete textbox in Find closest desired mushroom of specific type
@@ -135,7 +136,6 @@ function getAllDistinctMushroomFindingsSpecies() {
             var specie = mushroomObject[i].name;
             availableMushrooms.push(specie);
         }
-
         initSearch(availableMushrooms);
     });
 
@@ -145,10 +145,22 @@ function getAllDistinctMushroomFindingsSpecies() {
 
 }
 
+manuallySetPosition = false;
+
+function manuallySelected_closest(){
+    document.getElementById('manual_location_button').disabled = false;
+    manuallySetPosition = true;
+}
+
+function manuallySelected(){
+    document.getElementById('manual_location_navigation_button').disabled = false;
+    manuallySetPosition = true;
+}
+
 // Get the closest mushroom of a specific type from a given coordinate
 function getClosestDesiredMushroom(automatic, shouldNavigate, mushroom_type) {
 
-    if(userCoords == null){
+    if(userCoords == null && !manuallySetPosition){
         window.alert("Couldn't receive any position. Go to the Setting and turn on the geolocation if you didn't provide :)!")
     }
 
@@ -205,35 +217,50 @@ function getClosestDesiredMushroom(automatic, shouldNavigate, mushroom_type) {
             var lon = mushroom_the_geom.coordinates[0];
             var lat = mushroom_the_geom.coordinates[1];
             var coordinates = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
-
-            // Creating a ol.Feature of the object
-            var feature = new ol.Feature({
-                name: 'closestSpecificMushroom',
-                geometry: new ol.geom.Point(coordinates),
-                specie: specie,
-                quantity: quantity,
-                finding_place: finding_place,
-                precision: precision,
-                date: date,
-                comment: comment,
-                biotope: biotope
-            });
-
-            // Add the feature to the highlighted_mushrooms vector source
-            highlighted_mushrooms.addFeature(feature);
-
-            // Set the view to the highlighted mushroom layer
-            var extent = highlighted_mushroom_layer.getSource().getExtent();
-            map.getView().fit(extent, map.getSize());
-            map.getView().setZoom(14);
-
-            sidebar.close();
 			
-	    // Navigation = true
-            if (shouldNavigate){
-                var travelMode = $('input[name=travel_mode]:checked').val();
+	    // If the getClosestDesiredMushroom is used for routing, add different name for the highlight feature
+	    // This can be then used for handling the feature click content differently
+	    if (shouldNavigate == true) {
+		feature = new ol.Feature({
+                    name: 'closestRouteMushroom',
+                    geometry: new ol.geom.Point(coordinates),
+                    specie: specie,
+                    quantity: quantity,
+                    finding_place: finding_place,
+                    precision: precision,
+                    date: date,
+                    comment: comment,
+                    biotope: biotope
+                });
+
+		highlighted_mushrooms.addFeature(feature);
+
+	        var travelMode = $('input[name=travel_mode]:checked').val();
                 navigateToMush(longitude, latitude, mushroom_the_geom.coordinates[0], mushroom_the_geom.coordinates[1], travelMode, true);
+		
+	    } else {
+		feature = new ol.Feature({
+                    name: 'closestSpecificMushroom',
+                    geometry: new ol.geom.Point(coordinates),
+                    specie: specie,
+                    quantity: quantity,
+                    finding_place: finding_place,
+                    precision: precision,
+                    date: date,
+                    comment: comment,
+                    biotope: biotope
+                });
+
+		highlighted_mushrooms.addFeature(feature);
+
+                // Set the view to the highlighted mushroom layer
+                var extent = highlighted_mushroom_layer.getSource().getExtent();
+                map.getView().fit(extent, map.getSize());
+                map.getView().setZoom(14);
+
+                sidebar.close();
             }
+
         });
 
         request.fail(function(jqXHR, textStatus, state) {
@@ -288,7 +315,6 @@ function getAllUserFindings() {
             map.getView().fit(extent, map.getSize(), {
 	        padding: viewPadding,
 	        minResolution: 13
-	        //maxZoom: 10
 	    });
 	} else {
 	    // If there is no mushroom findings for the user set the view to the center of Sweden
@@ -580,7 +606,8 @@ function deleteQuery() {
 		    }),
 		    offsetY: 5
 		})
-	    })); 
+	    }));
+
             //highlightFeature.setGeometry(null);
         });
 

@@ -1,7 +1,7 @@
 var insertCoords, insertPoint;
              
 function crud() {
-  
+ 
     sidebar.open('home');
 
     // This will load every user finding to the map
@@ -30,9 +30,10 @@ function crud() {
 	})
     });
 
-    // Add the nature areas layer after the mapbox layer
+    // Add the nature areas layer after the mapbox layer and set the visibility false
     layers = map.getLayers();
     layers.insertAt(1, natureAreas);
+    natureAreas.setVisible(false);
 
     // Check the visibility of the nature area layer -> restrict the load of features
     map.getView().on('change:resolution', function (event) {
@@ -57,7 +58,7 @@ function crud() {
 	       }
 	    });
 
-	    if (feature) {
+	    if (feature) {		
                 image = "mushroom";
 
                 // Format the day already
@@ -73,7 +74,7 @@ function crud() {
                 // Form is calling a insertQuery() function in query_functions.js
 	        insertInfoContent.innerHTML = 
 		    "<div><center><img src='/images/" + image + ".ico' style='width:60px;height:60px;'></center><hr>" +
-            	    "<form role='form' action='javascript:insertQuery()'>" +
+            	    "<form role='form' autocomplete='off' action='javascript:insertQuery()'>" +
                         "<label>* Specie: </label> <input type='text' id='specie'><br />" +
                         "<label>Quantity: </label> <input type='text' id='quantity'><br />" +
                         "<label>Unit: </label> <input type='text' id='unit'><br />" +
@@ -123,7 +124,7 @@ function crud() {
 	
         // Form is calling a updateQuery() function in query_functions.js
 	updateInfoContent.innerHTML = 
-            "<form role='form' action='javascript:updateQuery()'>" +
+            "<form role='form' autocomplete='off' action='javascript:updateQuery()'>" +
             	"<label>Specie: </label> <input type='text' id='updateSpecie' placeholder=" + value.specie + "><br />" +
             	"<label>Quantity: </label> <input type='text' id='updateQuantity' placeholder=" + quantity + "><br />" +
             	"<label>Unit: </label> <input type='text' id='updateUnit' placeholder=" + value.unit + "><br />" +
